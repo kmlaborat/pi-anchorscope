@@ -60,6 +60,18 @@ content: |
 ## On Failure
 
 ```
+NO_MATCH: Anchor not found in file
+  Action: Re-analyze the target code region
+```
+
+```
+HASH_MISMATCH: File changed since SCOPED
+  Expected: <expected_hash>
+  Actual: <actual_hash>
+  Action: Re-run /skill:anchorscope-scope-anchoring
+```
+
+```
 ERROR: Cannot establish unique anchor.
   Reason: <explanation>
   Action: <expanding anchor | requesting clarification from your human partner>

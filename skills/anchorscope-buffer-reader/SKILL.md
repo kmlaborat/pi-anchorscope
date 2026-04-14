@@ -17,8 +17,8 @@ The Anchor Buffer is AnchorScope's external memory. It compensates for context c
 Parse as YAML or JSON. On parse failure:
 
 ```
-ERROR: Anchor Buffer is corrupted — cannot parse.
-Action: Request the original buffer from your human partner.
+IO_ERROR: Buffer file unreadable
+  Action: Request the original buffer from your human partner
 ```
 
 ### Step 2 — Validate required fields
@@ -33,7 +33,9 @@ Check that all of the following exist:
 For each missing field:
 
 ```
-ERROR: Required field "<field>" is missing from Anchor Buffer.
+IO_ERROR: Buffer missing required field
+  Field: <field>
+  Action: Request the original buffer from your human partner
 ```
 
 ### Step 3 — Identify current state
@@ -64,10 +66,10 @@ Computed hash != hash.before → hash mismatch
 On mismatch:
 
 ```
-ERROR: Hash mismatch — file has changed since SCOPED.
-  hash.before: <expected>
-  current:     <computed>
-  Action: Re-anchor the scope with /skill:anchorscope-scope-anchoring.
+HASH_MISMATCH: File changed since SCOPED
+  Expected: <expected>
+  Actual: <computed>
+  Action: Re-anchor the scope with /skill:anchorscope-scope-anchoring
 ```
 
 ### Step 6 — Determine next action

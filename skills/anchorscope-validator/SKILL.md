@@ -39,8 +39,10 @@ Mismatch → ABORT, do not approve or reject
 On mismatch:
 
 ```
-ERROR: Hash mismatch — file changed since SCOPED.
-Action: Re-run /skill:anchorscope-scope-anchoring before retrying.
+HASH_MISMATCH: File changed since SCOPED
+  Expected: <expected_hash>
+  Actual: <actual_hash>
+  Action: Re-run /skill:anchorscope-scope-anchoring before retrying
 ```
 
 ### 3. Scope Containment

@@ -98,10 +98,10 @@ true_id: <16-char hex>
 - [x] CRLF→LF: Normalization enforced in all operations
 - [x] Error handling: Core errors documented
 - [x] Explicit CLI error format: `NO_MATCH`, `HASH_MISMATCH`, etc.
-- [ ] Buffer structure: Align with CLI's `true_id` focus
+- [x] Buffer structure: Align with CLI's `true_id` focus
 - [ ] External tools: Document `pipe` and `paths` commands
 - [x] Storage paths: Document ephemeral buffer location
-- [ ] Nested anchoring: Add more examples
+- [x] Nested anchoring: Add more examples
 
 ## 🎯 Priority Improvements
 
@@ -127,4 +127,4 @@ The skills correctly implement the AnchorScope protocol core:
 - ✅ CRLF→LF normalization throughout
 - ✅ State persistence via Anchor Buffer
 
-**Status:** ✅ Complete - explicit error messages and buffer documentation have been added.
+**Status:** ✅ Complete - explicit error messages, buffer documentation, and `true_id` alignment have been added.

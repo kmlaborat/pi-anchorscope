@@ -88,6 +88,7 @@ Level 1 (file-level anchor):
 scope_hash = xxh3_64("def add(a, b):\n    return a + b")
 file_hash  = xxh3_64("<full file content>")
 true_id    = xxh3_64(hex(file_hash) || 0x5F || hex(scope_hash))
+# Result: true_id encodes file-level content
 ```
 
 Level 2 (nested within function):
@@ -95,7 +96,21 @@ Level 2 (nested within function):
 parent_scope_hash = <Level 1's scope_hash>
 nested_hash       = xxh3_64("return a + b")
 nested_true_id    = xxh3_64(hex(parent_scope_hash) || 0x5F || hex(nested_hash))
+# Result: nested_true_id encodes both parent context and nested content
 ```
+
+#### Real-world Use Case
+
+When editing code inside a function:
+1. **Level 1**: Anchor the entire function (file-level scope)
+   - `scope_hash` = hash of function body
+   - `true_id` = encodes file → function mapping
+
+2. **Level 2**: Anchor specific code inside function (function-level scope)
+   - `parent_scope_hash` = Level 1's `scope_hash`
+   - `nested_true_id` = encodes file → function → code mapping
+
+This enables multiple independent edits to the same file without conflict, as each edit uses a unique True ID.
 
 ### Step 8 — Write to Anchor Buffer
 

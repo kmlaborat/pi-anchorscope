@@ -150,6 +150,26 @@ The buffer contains:
 
 ⚠️ **The buffer is ephemeral** — it is automatically cleaned up after a successful `write` operation.
 
+## Buffer Structure
+
+The Anchor Scope protocol uses `true_id` as the primary identifier for anchored scopes:
+
+```
+true_id = xxh3_64(hex(file_hash) || 0x5F || hex(scope_hash))
+```
+
+For nested anchoring (level 2+):
+```
+true_id = xxh3_64(hex(parent_scope_hash) || 0x5F || hex(child_scope_hash))
+```
+
+### True ID Benefits
+- **Stable identification**: Content-derived identifier that persists across edits
+- **Parent context**: Encodes parent scope for nested anchoring
+- **Human-readable aliases**: Use `anchorscope label` to create memorable names
+
+→ See `/skill:anchorscope-scope-anchoring` for detailed anchoring algorithm.
+
 ## Recursion
 
 A COMMITTED task may generate further DISCOVERED sub-tasks. Track parent-child relationships in `parent_id` and `children`. Terminate when all tasks are COMMITTED and none remain REJECTED.

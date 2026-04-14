@@ -6,6 +6,24 @@ This project provides the skill implementation that brings the AnchorScope proto
 
 > **Note:** This is the **pi skill implementation** of the AnchorScope protocol. For the protocol specification, see [kmlaborat/AnchorScope](https://github.com/kmlaborat/AnchorScope).
 
+## Documentation
+
+This package includes the following skills:
+
+| Skill | Purpose |
+|-------|---------|
+| `/skill:anchorscope-core` | Main workflow coordinator |
+| `/skill:anchorscope-anchoring-guide` | Practical anchoring strategies |
+| `/skill:anchorscope-tutorial` | Full CLI protocol reference |
+| `/skill:anchorscope-scope-anchoring` | Step-by-step anchoring algorithm |
+| `/skill:anchorscope-decomposer` | Single-phase SCOPED workflow |
+| `/skill:anchorscope-proposer` | Single-phase DRAFTED workflow |
+| `/skill:anchorscope-validator` | Single-phase REVIEWING workflow |
+| `/skill:anchorscope-integrator` | Single-phase COMMITTED workflow |
+| `/skill:anchorscope-buffer-reader` | Read Anchor Buffer state |
+
+For detailed anchoring guidance, see `/skill:anchorscope-anchoring-guide`.
+
 ## Install
 
 ```bash

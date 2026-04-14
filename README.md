@@ -1,6 +1,6 @@
 # pi-anchorscope
 
-Deterministic code editing skills for [pi](https://github.com/badlogic/pi-mono), implementing the AnchorScope protocol.
+Deterministic code editing **skills** for [pi](https://github.com/badlogic/pi-mono), implementing the **AnchorScope protocol** — a framework for safe, reproducible LLM-based code editing through anchored scopes, true IDs, and hash verification.
 
 ## Install
 

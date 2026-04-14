@@ -1,9 +1,10 @@
 ---
 name: anchorscope-integrator
 description: Use to execute the COMMITTED phase of an AnchorScope task — applies an approved modification using as.write after a final hash verification; the only skill that writes to files
+compatibility: pi-v0.22.0+
 ---
 
-> **Related skills:** Receives from `/skill:anchorscope-validator` (APPROVED). On completion, check for follow-on tasks with `/skill:anchorscope-core`. On hash mismatch before write, re-anchor with `/skill:anchorscope-scope-anchoring`. Full workflow at `/skill:anchorscope-core`.
+> **Related skills:** Receives from `/skill:anchorscope-validator` (APPROVED). On completion, check for follow-on tasks with `/skill:anchorscope-core`. On hash mismatch before write, re-anchor with `/skill:anchorscope-scope-anchoring`. Full workflow at `/skill:anchorscope-core`. Only skill that writes to files.
 
 # AnchorScope Integrator
 

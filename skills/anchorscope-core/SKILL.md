@@ -1,9 +1,10 @@
 ---
 name: anchorscope-core
 description: Use when modifying existing code to enforce deterministic, verifiable edits via the AnchorScope protocol — prevents non-deterministic replacements, context loss, and unsafe modifications
+compatibility: pi-v0.22.0+
 ---
 
-> **Related skills:** Extracting a scope? `/skill:anchorscope-scope-anchoring`. Reading an Anchor Buffer? `/skill:anchorscope-buffer-reader`. Want to delegate phases? `/skill:anchorscope-decomposer` → `/skill:anchorscope-proposer` → `/skill:anchorscope-validator` → `/skill:anchorscope-integrator`. See each skill for detailed phase instructions.
+> **Related skills:** Extracting a scope? `/skill:anchorscope-scope-anchoring`. Reading an Anchor Buffer? `/skill:anchorscope-buffer-reader`. Want to delegate phases? `/skill:anchorscope-decomposer` → `/skill:anchorscope-proposer` → `/skill:anchorscope-validator` → `/skill:anchorscope-integrator`. See each skill for detailed phase instructions. Use `/skill:anchorscope-decomposer` for single-phase tasks.
 
 # AnchorScope Core
 

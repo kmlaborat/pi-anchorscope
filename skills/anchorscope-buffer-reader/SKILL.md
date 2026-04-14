@@ -1,6 +1,7 @@
 ---
 name: anchorscope-buffer-reader
 description: Use when reading or resuming from an Anchor Buffer — interprets task state, validates hash integrity, and determines the next action to take
+compatibility: pi-v0.22.0+
 ---
 
 > **Related skills:** Part of the AnchorScope workflow. Full overview at `/skill:anchorscope-core`. For re-anchoring after hash mismatch, use `/skill:anchorscope-scope-anchoring`. Learn about each phase: `/skill:anchorscope-decomposer`, `/skill:anchorscope-proposer`, `/skill:anchorscope-validator`, `/skill:anchorscope-integrator`.

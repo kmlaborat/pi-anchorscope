@@ -1,9 +1,10 @@
 ---
 name: anchorscope-validator
 description: Use to execute the REVIEWING phase of an AnchorScope task — validates the proposed modification for anchor integrity, hash consistency, scope containment, and correctness; produces APPROVED or REJECTED
+compatibility: pi-v0.22.0+
 ---
 
-> **Related skills:** Receives from `/skill:anchorscope-proposer`. On APPROVED, hand off to `/skill:anchorscope-integrator`. On REJECTED, send back to `/skill:anchorscope-proposer`. Hash mismatch needs `/skill:anchorscope-scope-anchoring`. Full workflow at `/skill:anchorscope-core`.
+> **Related skills:** Receives from `/skill:anchorscope-proposer`. On APPROVED, hand off to `/skill:anchorscope-integrator`. On REJECTED, send back to `/skill:anchorscope-proposer`. Hash mismatch needs `/skill:anchorscope-scope-anchoring`. Full workflow at `/skill:anchorscope-core`. Verify anchor integrity first.
 
 # AnchorScope Validator
 

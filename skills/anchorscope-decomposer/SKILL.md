@@ -1,9 +1,10 @@
 ---
 name: anchorscope-decomposer
 description: Use to execute the SCOPED phase of an AnchorScope task — reads the target file and extracts a uniquely identifiable Anchored Scope with True ID and hash
+compatibility: pi-v0.22.0+
 ---
 
-> **Related skills:** Called after DISCOVERED phase in `/skill:anchorscope-core`. Anchoring details at `/skill:anchorscope-scope-anchoring`. On completion, hand off to `/skill:anchorscope-proposer`. Full workflow at `/skill:anchorscope-core`.
+> **Related skills:** Called after DISCOVERED phase in `/skill:anchorscope-core`. Anchoring details at `/skill:anchorscope-scope-anchoring`. On completion, hand off to `/skill:anchorscope-proposer`. Full workflow at `/skill:anchorscope-core`. Read Anchor Buffer with `/skill:anchorscope-buffer-reader`.
 
 # AnchorScope Decomposer
 
@@ -60,6 +61,8 @@ content: |
 
 ```
 ERROR: Cannot establish unique anchor.
-Reason: <explanation>
-Action: <expanding anchor | requesting clarification from your human partner>
+  Reason: <explanation>
+  Action: <expanding anchor | requesting clarification from your human partner>
 ```
+
+Note: If expansion fails, consider moving to a larger parent scope (e.g., from function to class level).

@@ -1,9 +1,10 @@
 ---
 name: anchorscope-scope-anchoring
 description: Use when extracting an Anchored Scope for AnchorScope editing — provides the step-by-step algorithm to identify a target code region that is uniquely identifiable within its parent scope
+compatibility: pi-v0.22.0+
 ---
 
-> **Related skills:** Called from `/skill:anchorscope-decomposer`. When scope is established, proceed to `/skill:anchorscope-proposer`. If the Anchor Buffer needs reading first, use `/skill:anchorscope-buffer-reader`. Full workflow at `/skill:anchorscope-core`.
+> **Related skills:** Called from `/skill:anchorscope-decomposer`. When scope is established, proceed to `/skill:anchorscope-proposer`. If the Anchor Buffer needs reading first, use `/skill:anchorscope-buffer-reader`. Full workflow at `/skill:anchorscope-core`. Verify uniqueness at each step.
 
 # Anchored Scope Anchoring
 
@@ -141,6 +142,8 @@ ERROR: Anchor not unique within parent scope.
 ERROR: Cannot establish unique anchor in <parent_scope> or any enclosing scope.
   Reason: <explanation>
   Action: Requesting guidance from your human partner.
+
+Tip: Try expanding the parent scope to class/module level if function-level anchoring fails.
 ```
 
 ## Checklist Before Proceeding

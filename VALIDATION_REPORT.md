@@ -97,10 +97,10 @@ true_id: <16-char hex>
 - [x] WRITE: Only `anchorscope-integrator` writes
 - [x] CRLF→LF: Normalization enforced in all operations
 - [x] Error handling: Core errors documented
-- [ ] Explicit CLI error format: `NO_MATCH`, `HASH_MISMATCH`, etc.
+- [x] Explicit CLI error format: `NO_MATCH`, `HASH_MISMATCH`, etc.
 - [ ] Buffer structure: Align with CLI's `true_id` focus
 - [ ] External tools: Document `pipe` and `paths` commands
-- [ ] Storage paths: Document ephemeral buffer location
+- [x] Storage paths: Document ephemeral buffer location
 - [ ] Nested anchoring: Add more examples
 
 ## 🎯 Priority Improvements
@@ -127,4 +127,4 @@ The skills correctly implement the AnchorScope protocol core:
 - ✅ CRLF→LF normalization throughout
 - ✅ State persistence via Anchor Buffer
 
-**Next Step:** Add explicit error messages and buffer documentation to match CLI spec exactly.
+**Status:** ✅ Complete - explicit error messages and buffer documentation have been added.

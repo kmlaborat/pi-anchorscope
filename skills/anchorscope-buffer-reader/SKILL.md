@@ -10,6 +10,36 @@ compatibility: pi-v0.22.0+
 
 The Anchor Buffer is AnchorScope's external memory. It compensates for context compaction and session boundaries. When a buffer is present, read it before doing anything else.
 
+## Buffer Storage
+
+The Anchor Buffer is stored in the AnchorScope buffer directory:
+
+| Platform | Path |
+|----------|------|
+| Windows | `%TEMP%\anchorscope\` |
+| macOS/Linux | `$TMPDIR/anchorscope/` |
+
+```bash
+# Windows
+tree %TEMP%\anchorscope\
+
+# macOS/Linux
+tree $TMPDIR/anchorscope/
+```
+
+### Debugging
+
+To inspect the buffer contents for troubleshooting:
+```bash
+# View all buffers
+cat %TEMP%\anchorscope\buffer\*\*\content  # Windows
+cat $TMPDIR/anchorscope/buffer/*/*/content   # macOS/Linux
+
+# View labels
+cat %TEMP%\anchorscope\labels\*.json        # Windows
+cat $TMPDIR/anchorscope/labels/*.json         # macOS/Linux
+```
+
 ## Parsing Procedure
 
 ### Step 1 — Parse the buffer

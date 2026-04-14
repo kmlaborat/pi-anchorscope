@@ -126,6 +126,30 @@ anchorscope_task:
 
 → How to read the Anchor Buffer: `/skill:anchorscope-buffer-reader`
 
+## Buffer Storage
+
+The Anchor Buffer is stored in the AnchorScope buffer directory:
+
+| Platform | Path |
+|----------|------|
+| Windows | `%TEMP%\anchorscope\` |
+| macOS/Linux | `$TMPDIR/anchorscope/` |
+
+```bash
+# Windows
+tree %TEMP%\anchorscope\
+
+# macOS/Linux
+tree $TMPDIR/anchorscope/
+```
+
+The buffer contains:
+- `buffer/{file_hash}/{true_id}/content` — normalized anchored content
+- `buffer/{file_hash}/{true_id}/replacement` — proposed replacement (created by external tools)
+- `labels/{alias}.json` — human-readable alias mappings
+
+⚠️ **The buffer is ephemeral** — it is automatically cleaned up after a successful `write` operation.
+
 ## Recursion
 
 A COMMITTED task may generate further DISCOVERED sub-tasks. Track parent-child relationships in `parent_id` and `children`. Terminate when all tasks are COMMITTED and none remain REJECTED.

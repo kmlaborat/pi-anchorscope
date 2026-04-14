@@ -57,6 +57,29 @@ content: |
   <verbatim anchored code, CRLF normalized to LF>
 ```
 
+## Buffer Storage
+
+The Anchor Buffer is stored in the AnchorScope buffer directory:
+
+| Platform | Path |
+|----------|------|
+| Windows | `%TEMP%\anchorscope\` |
+| macOS/Linux | `$TMPDIR/anchorscope/` |
+
+```bash
+# Windows
+tree %TEMP%\anchorscope\
+
+# macOS/Linux
+tree $TMPDIR/anchorscope/
+```
+
+The buffer contains:
+- `buffer/{file_hash}/{true_id}/content` — normalized anchored content
+- `buffer/{file_hash}/{true_id}/replacement` — proposed replacement (created by external tools)
+
+⚠️ **The buffer is ephemeral** — it is automatically cleaned up after a successful write.
+
 ## On Failure
 
 ```

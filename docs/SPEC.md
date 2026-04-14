@@ -100,7 +100,7 @@ anchorscope_task:
   true_id: sha256:<hash>
   content: |
     <verbatim anchored code as of SCOPED>
-  proposed_change: |
+  proposed_replacement: |
     <proposed replacement>   # present from DRAFTED onward
   validation:
     status: pending          # pending | approved | rejected
@@ -143,7 +143,7 @@ Before APPROVED can be issued, all five criteria must pass:
 
 1. **Anchor integrity** — `anchor.start` and `anchor.end` are present in the current file and unique within the parent scope
 2. **Hash integrity** — SHA-256 of the current anchored region matches `hash.before`; mismatch aborts validation entirely and requires re-anchoring
-3. **Scope containment** — `proposed_change` modifies only content within the anchor boundaries
+3. **Scope containment** — `proposed_replacement` modifies only content within the anchor boundaries
 4. **Minimal diff** — no changes unrelated to the stated `description` (no reformatting, no unrelated renames, no opportunistic refactoring)
 5. **Syntactic correctness** — the replacement is syntactically valid; indentation, bracket matching, and existing signatures are preserved unless explicitly changing them
 
@@ -153,11 +153,11 @@ Before APPROVED can be issued, all five criteria must pass:
 
 The Integrator is the only component that writes to files. It follows this sequence without exception:
 
-1. Read `anchor`, `hash.before`, and `proposed_change` from the Anchor Buffer
+1. Read `anchor`, `hash.before`, and `proposed_replacement` from the Anchor Buffer
 2. Read the current file with `as.read`
 3. Locate the anchored region and compute SHA-256 — compare to `hash.before`
 4. If mismatch: abort, report, do not write
-5. Construct new file content: `<before anchor> + proposed_change + <after anchor>`
+5. Construct new file content: `<before anchor> + proposed_replacement + <after anchor>`
 6. Write atomically with `as.write`
 7. Re-read and confirm the change landed correctly
 8. Compute `hash.after` of the new anchored region

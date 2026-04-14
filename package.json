@@ -1,0 +1,19 @@
+{
+  "name": "anchorscope-skills",
+  "version": "0.1.0",
+  "description": "Deterministic code editing skills for pi, implementing the AnchorScope protocol",
+  "keywords": [
+    "pi-package"
+  ],
+  "license": "MIT",
+  "files": [
+    "skills/",
+    "README.md",
+    "LICENSE"
+  ],
+  "pi": {
+    "skills": [
+      "skills"
+    ]
+  }
+}

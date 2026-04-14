@@ -9,7 +9,8 @@
   "files": [
     "skills/",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "AnchorScope-tutorial.md"
   ],
   "pi": {
     "skills": [

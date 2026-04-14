@@ -56,9 +56,37 @@ Address every point in `validation.comments`. Do not reproduce the previous prop
 
 ## External Tool Integration
 
-If `replacement` is pre-populated by `anchorscope pipe`:
+### stdout mode (default)
+
 ```bash
 anchorscope pipe --true-id {true_id} --out | external-tool | anchorscope pipe --true-id {true_id} --in
+```
+
+### file-io mode (Windows-compatible)
+
+```bash
+anchorscope pipe --true-id {true_id} --tool <tool> --file-io --tool-args "<args>"
+```
+
+This passes the content path to the external tool, which writes output to a path provided by `pipe`.
+
+### When to Use file-io Mode
+
+- **Windows compatibility:** Avoids shell pipe issues with special characters
+- **Complex tool chains:** Easier debugging with explicit file paths
+- **Large content:** Avoids stdout buffering issues
+
+### Complete External Tool Workflow
+
+```bash
+# 1. Get True ID from decomposer
+TRUE_ID=<true_id>
+
+# 2. Pipe to external tool (file-io mode)
+anchorscope pipe --true-id $TRUE_ID --tool my-transform-tool --file-io --tool-args "--option value"
+
+# 3. Write from buffer to file
+anchorscope write --true-id $TRUE_ID --from-replacement
 ```
 
 The proposed replacement will use the tool's output.

@@ -112,6 +112,20 @@ When editing code inside a function:
 
 This enables multiple independent edits to the same file without conflict, as each edit uses a unique True ID.
 
+⚠️ **Buffer Isolation**: Level 2+ anchoring reads from `{file_hash}/{true_id}/content`, NOT the original file.
+
+This is the key reason why parent buffers become STALE after child writes:
+
+| Level | Read Source | Write Effect |
+|-------|-------------|--------------|
+| 1 | `file.rs` | Creates `{file_hash}/{true_id_1}/content` |
+| 2 | `{file_hash}/{true_id_1}/content` | Creates `{file_hash}/{true_id_1}/{true_id_2}/content` |
+| 2 write | — | Deletes `{true_id_2}`, makes `{true_id_1}` STALE |
+
+When a child level writes successfully, the parent's buffer content is no longer valid because the child's write operation deletes the child's buffer directory and invalidates the parent's cached content.
+
+This is why the Stale Buffer Protocol requires re-reading from the original file before using a parent buffer again.
+
 ### Step 8 — Write to Anchor Buffer
 
 Record all fields and advance state to SCOPED.

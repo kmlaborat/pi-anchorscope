@@ -82,6 +82,42 @@ Tools can provide `replacement` content:
 anchorscope pipe --true-id {true_id} --out | external-tool | anchorscope pipe --true-id {true_id} --in
 ```
 
+## Label Support
+
+If a label is used instead of `true_id`, AnchorScope resolves it internally:
+
+```bash
+anchorscope write --label <name> --from-replacement
+```
+
+The `label` is stored in `{TMPDIR}/anchorscope/labels/<name>.json`.
+
+### Label Resolution Workflow
+
+```bash
+# 1. Create label
+anchorscope label --name "main_function" --true-id 8db42edf7905d28f
+
+# 2. Use label in write
+anchorscope write --label "main_function" --from-replacement
+
+# 3. AnchorScope internally:
+#    a. Resolves "main_function" → 8db42edf7905d28f
+#    b. Reads from buffer/{8db42edf7905d28f}/replacement
+#    c. Validates and writes to file
+```
+
+### When to Use Labels
+
+- **Manual workflows:** Easier to remember "main_function" than a hex hash
+- **Interactive sessions:** No need to copy-paste long True IDs
+- **Multi-step processes:** More readable in scripts and documentation
+
+### Limitations
+
+- Labels cannot be combined with `--expected-hash` in `write` operations
+- Labels point to True IDs, so the same stale buffer rules apply
+
 ## Debugging Paths
 
 Use `anchorscope paths` to inspect buffer locations:

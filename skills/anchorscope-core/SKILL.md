@@ -227,3 +227,46 @@ A COMMITTED task may generate further DISCOVERED sub-tasks. Track parent-child r
 - NEVER fabricate context from memory instead of reading the file
 - NEVER perform blind search-and-replace
 - NEVER proceed when anchor uniqueness is uncertain
+
+## ⚠️ Stale Buffer Protocol (CRITICAL)
+
+When a child task successfully commits, the parent buffer becomes STALE:
+
+| Level | Operation | Buffer State |
+|-------|-----------|--------------|
+| 1 | `read --file file.rs --anchor "fn foo()"` | Buffer 1 fresh |
+| 2 | `read --true-id <id1> --anchor "..."` | Buffer 2 fresh |
+| 2 | `write --true-id <id2> --from-replacement` | Buffer 2 deleted, Buffer 1 **STALE** |
+
+**Before re-reading a parent buffer, you MUST verify it hasn't been made stale by a child write.**
+If uncertain, re-read from the original file.
+
+See Tutorial Section 10.6 for full explanation: `/skill:anchorscope-tutorial` (if you have it) or refer to the AnchorScope tutorial at `AnchorScope-tutorial.md`.
+
+### Example Stale Buffer Scenario
+
+```bash
+# Level 1: Read function (creates buffer)
+anchorscope read --file demo.rs --anchor "fn calculate_area()"
+TRUE_ID_1=<result>
+
+# Level 2: Read pattern inside function (reads from buffer 1)
+anchorscope read --true-id $TRUE_ID_1 --anchor "width * height"
+TRUE_ID_2=<result>
+
+# Level 2: Write replacement (deletes buffer 2, makes buffer 1 STALE)
+anchorscope write --true-id $TRUE_ID_2 --from-replacement
+
+# ❌ WRONG: Do NOT use TRUE_ID_1 now - it's stale!
+# anchorscope read --true-id $TRUE_ID_1 --anchor "other pattern"
+
+# ✅ CORRECT: Re-read the parent from original file to refresh
+anchorscope read --file demo.rs --anchor "fn calculate_area()"
+TRUE_ID_1_FRESH=<new_result>
+```
+
+### LLM Safety Checklist
+
+- [ ] Before each `read`, verify the target buffer is fresh (not made stale by a child `write`)
+- [ ] Never reuse a True ID if it was parent to any successful `write`
+- [ ] When uncertain, re-read from the original file

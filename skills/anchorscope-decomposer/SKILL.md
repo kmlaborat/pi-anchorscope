@@ -38,6 +38,8 @@ Follow `/skill:anchorscope-scope-anchoring` step by step:
 8. Compute `xxh3_64` scope hash and True ID
 9. Update Anchor Buffer to SCOPED
 
+**Multi-line anchors:** For multi-line content, consider using `--anchor-file` instead of inline `--anchor` strings to avoid shell escaping issues. See Tutorial Section 9 for details.
+
 ## Output
 
 ```yaml

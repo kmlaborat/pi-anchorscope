@@ -59,6 +59,21 @@ DISCOVERED → SCOPED → DRAFTED → REVIEWING → APPROVED → COMMITTED
 
 Each skill cross-references the next via `/skill:name`. After context compaction, any reference to an anchorscope skill keeps the chain alive. Clearing context ends the session.
 
+---
+
+## Attribution
+Skill format and structure adapted from [pi-superpowers](https://github.com/coctostan/pi-superpowers) by coctostan, itself adapted from [Superpowers](https://github.com/obra/superpowers) by Jesse Vincent, licensed under MIT.
+
+---
+
 ## License
 
-MIT
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for the full text.
+
+---
+
+### Disclaimer
+
+**THE SOFTWARE IS PROVIDED "AS IS"**, without warranty of any kind. As this is a reference implementation of a file-editing protocol, the author is not responsible for any data loss or unintended file modifications resulting from its use. Always use version control and test in a safe environment.
+
+Copyright (c) 2026 kmlaborat

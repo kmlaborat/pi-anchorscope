@@ -74,8 +74,27 @@ true_id    = xxh3_64(hex(file_hash) || 0x5F || hex(scope_hash))
 
 - All hashes are 16-character lowercase hex strings
 - `0x5F` is the ASCII underscore `_` used as separator
-- For nested anchoring (level 2+): replace `file_hash` with the parent's `scope_hash`
+- **For nested anchoring (level 2+):** replace `file_hash` with the parent's `scope_hash`:
+  ```
+  true_id = xxh3_64(hex(parent_scope_hash) || 0x5F || hex(child_scope_hash))
+  ```
 - Normalization (CRLF → LF) MUST be applied before hashing
+
+#### Example: Nested Anchoring
+
+Level 1 (file-level anchor):
+```
+scope_hash = xxh3_64("def add(a, b):\n    return a + b")
+file_hash  = xxh3_64("<full file content>")
+true_id    = xxh3_64(hex(file_hash) || 0x5F || hex(scope_hash))
+```
+
+Level 2 (nested within function):
+```
+parent_scope_hash = <Level 1's scope_hash>
+nested_hash       = xxh3_64("return a + b")
+nested_true_id    = xxh3_64(hex(parent_scope_hash) || 0x5F || hex(nested_hash))
+```
 
 ### Step 8 — Write to Anchor Buffer
 

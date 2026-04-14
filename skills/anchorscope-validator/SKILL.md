@@ -64,7 +64,7 @@ validation_report:
   scope_contained: true
   minimal_diff: true
   syntactically_correct: true
-  comments: ""
+  comments: ""  # Empty string for approved tasks
 ```
 
 ## Output (REJECTED)
@@ -78,7 +78,7 @@ validation_report:
   minimal_diff: <true|false>
   syntactically_correct: <true|false>
   comments: >
-    <Required: specific rejection reasons and corrective instructions>
+    <List of strings: specific rejection reasons and corrective instructions>
 ```
 
 ## Human-in-the-Loop

@@ -54,9 +54,9 @@ anchorscope_edit:
   hash:
     algorithm: xxh3_64
     before: <original hash>
-    after: <new hash>
+    after: <new hash>  # null if aborted
   true_id: <16-char lowercase hex>
-  status: success
+  status: success | aborted
 ```
 
 ## On Abort — Final Hash Mismatch

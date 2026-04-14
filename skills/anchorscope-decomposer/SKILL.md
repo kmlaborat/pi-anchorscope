@@ -50,7 +50,7 @@ anchor:
     <verbatim end anchor>
 hash:
   algorithm: xxh3_64
-  value: <16-char lowercase hex>
+  before: <16-char lowercase hex>
 true_id: <16-char lowercase hex>
 content: |
   <verbatim anchored code, CRLF normalized to LF>

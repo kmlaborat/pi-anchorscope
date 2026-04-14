@@ -170,6 +170,51 @@ true_id = xxh3_64(hex(parent_scope_hash) || 0x5F || hex(child_scope_hash))
 
 → See `/skill:anchorscope-scope-anchoring` for detailed anchoring algorithm.
 
+## External Tool Integration
+
+For advanced workflows, use external tools to process the anchored scope:
+
+### Pipe Mode
+
+**stdout mode (default):**
+```bash
+anchorscope pipe --true-id {true_id} --out | external-tool | anchorscope pipe --true-id {true_id} --in
+# or using label
+anchorscope pipe --label {alias} --out | external-tool | anchorscope pipe --label {alias} --in
+```
+
+* `--out`: streams `buffer/{true_id}/content` to stdout
+* `--in`: reads from stdin, validates and normalizes, writes to `buffer/{true_id}/replacement`
+
+**file-io mode:**
+```bash
+anchorscope pipe --true-id {true_id} --tool external-tool --file-io
+# or with tool arguments
+anchorscope pipe --true-id {true_id} --tool <external-tool> --file-io --tool-args "<arg1> <arg2>"
+```
+
+* Passes `buffer/{true_id}/content` path to external tool
+* External tool writes output to a path provided by `pipe`
+* `pipe` validates and normalizes output, then stores it as `replacement`
+
+### Paths Mode
+
+```bash
+anchorscope paths --true-id {true_id}
+# or
+anchorscope paths --label {alias}
+```
+
+Returns absolute paths of `content` and `replacement` for debugging or external tool integration.
+
+### Label Mode
+
+```bash
+anchorscope label --name <name> --true-id <hash>
+```
+
+Assigns a human-readable alias to a True ID for easier reference.
+
 ## Recursion
 
 A COMMITTED task may generate further DISCOVERED sub-tasks. Track parent-child relationships in `parent_id` and `children`. Terminate when all tasks are COMMITTED and none remain REJECTED.

@@ -87,3 +87,18 @@ validation_report:
 ## Human-in-the-Loop
 
 If your human partner wants to approve manually, produce the validation report and wait. Do not auto-advance to COMMITTED without their confirmation.
+
+## External Tool Integration
+
+Tools can pre-populate `replacement` via `anchorscope pipe`:
+```bash
+anchorscope pipe --true-id {true_id} --out | external-tool | anchorscope pipe --true-id {true_id} --in
+```
+
+## Debugging Paths
+
+Use `anchorscope paths` to inspect buffer locations:
+```bash
+anchorscope paths --true-id {true_id}
+anchorscope paths --label {alias}
+```

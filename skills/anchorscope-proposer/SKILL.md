@@ -53,3 +53,20 @@ Address every point in `validation.comments`. Do not reproduce the previous prop
 - Adding a trailing newline that wasn't there — hash will not match
 - Changing a function signature when only the body was meant to change
 - Assuming context outside the Anchored Scope without reading it first
+
+## External Tool Integration
+
+If `replacement` is pre-populated by `anchorscope pipe`:
+```bash
+anchorscope pipe --true-id {true_id} --out | external-tool | anchorscope pipe --true-id {true_id} --in
+```
+
+The proposed replacement will use the tool's output.
+
+## Debugging Paths
+
+Use `anchorscope paths` to inspect buffer locations:
+```bash
+anchorscope paths --true-id {true_id}
+anchorscope paths --label {alias}
+```

@@ -74,3 +74,18 @@ Report to your human partner before proceeding.
 ## After COMMITTED
 
 Check `children` in the Anchor Buffer. If any sub-tasks are pending, start each from DISCOVERED via `/skill:anchorscope-core`. If `parent_id` is set, update the parent buffer to reflect this task's completion.
+
+## External Tool Integration
+
+Tools can provide `replacement` content:
+```bash
+anchorscope pipe --true-id {true_id} --out | external-tool | anchorscope pipe --true-id {true_id} --in
+```
+
+## Debugging Paths
+
+Use `anchorscope paths` to inspect buffer locations:
+```bash
+anchorscope paths --true-id {true_id}
+anchorscope paths --label {alias}
+```

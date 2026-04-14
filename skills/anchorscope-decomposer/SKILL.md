@@ -80,6 +80,17 @@ The buffer contains:
 
 ⚠️ **The buffer is ephemeral** — it is automatically cleaned up after a successful write.
 
+## External Tool Integration
+
+Use `anchorscope pipe` to integrate external tools:
+
+```bash
+# Pipe the anchored scope to an external tool
+anchorscope pipe --true-id {true_id} --out | external-tool | anchorscope pipe --true-id {true_id} --in
+```
+
+The external tool's output is stored in `replacement` and used by `anchorscope-proposer`.
+
 ## On Failure
 
 ```

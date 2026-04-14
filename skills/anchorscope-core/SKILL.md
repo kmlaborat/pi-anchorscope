@@ -241,7 +241,7 @@ When a child task successfully commits, the parent buffer becomes STALE:
 **Before re-reading a parent buffer, you MUST verify it hasn't been made stale by a child write.**
 If uncertain, re-read from the original file.
 
-See Tutorial Section 10.6 for full explanation: `/skill:anchorscope-tutorial` (if you have it) or refer to the AnchorScope tutorial at `AnchorScope-tutorial.md`.
+See Tutorial Section 10.6 for full explanation: `/skill:anchorscope-tutorial` (if you have it), `/skill:anchorscope-anchoring-guide` (detailed strategies), or refer to the AnchorScope tutorial at `AnchorScope-tutorial.md`.
 
 ### Example Stale Buffer Scenario
 

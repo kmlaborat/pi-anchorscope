@@ -3,7 +3,7 @@ name: anchorscope-proposer
 description: Use to execute the DRAFTED phase of an AnchorScope task — generates a precise, minimal code modification within the established Anchored Scope; also handles re-generation after REJECTED
 ---
 
-> **Related skills:** Requires SCOPED state from `/skill:anchorscope-decomposer`. On completion, hand off to `/skill:anchorscope-validator`. If restarting after rejection, check `/skill:anchorscope-buffer-reader` first.
+> **Related skills:** Requires SCOPED state from `/skill:anchorscope-decomposer`. On completion, hand off to `/skill:anchorscope-validator`. If restarting after rejection, check `/skill:anchorscope-buffer-reader` first. Full workflow at `/skill:anchorscope-core`.
 
 # AnchorScope Proposer
 

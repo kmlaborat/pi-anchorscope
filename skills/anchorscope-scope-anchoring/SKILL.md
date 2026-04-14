@@ -3,7 +3,7 @@ name: anchorscope-scope-anchoring
 description: Use when extracting an Anchored Scope for AnchorScope editing — provides the step-by-step algorithm to identify a target code region that is uniquely identifiable within its parent scope
 ---
 
-> **Related skills:** Called from `/skill:anchorscope-decomposer`. When scope is established, proceed to `/skill:anchorscope-proposer`. If the Anchor Buffer needs reading first, use `/skill:anchorscope-buffer-reader`.
+> **Related skills:** Called from `/skill:anchorscope-decomposer`. When scope is established, proceed to `/skill:anchorscope-proposer`. If the Anchor Buffer needs reading first, use `/skill:anchorscope-buffer-reader`. Full workflow at `/skill:anchorscope-core`.
 
 # Anchored Scope Anchoring
 

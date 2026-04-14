@@ -3,7 +3,7 @@ name: anchorscope-decomposer
 description: Use to execute the SCOPED phase of an AnchorScope task — reads the target file and extracts a uniquely identifiable Anchored Scope with True ID and hash
 ---
 
-> **Related skills:** Called after DISCOVERED phase in `/skill:anchorscope-core`. Anchoring details at `/skill:anchorscope-scope-anchoring`. On completion, hand off to `/skill:anchorscope-proposer`.
+> **Related skills:** Called after DISCOVERED phase in `/skill:anchorscope-core`. Anchoring details at `/skill:anchorscope-scope-anchoring`. On completion, hand off to `/skill:anchorscope-proposer`. Full workflow at `/skill:anchorscope-core`.
 
 # AnchorScope Decomposer
 

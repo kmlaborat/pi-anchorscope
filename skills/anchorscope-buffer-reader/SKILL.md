@@ -53,7 +53,7 @@ Record: `file`, `anchor.start`, `anchor.end`, `true_id`, `content` (if present).
 
 ### Step 5 — Verify hash integrity (when state is SCOPED or later)
 
-Read the current file with `as.read`. Locate the anchor region. Compute SHA-256 of the current content between anchors.
+Read the current file with `as.read`. Locate the anchor region. Normalize line endings (CRLF → LF). Compute `xxh3_64` of the normalized content between anchors.
 
 ```
 Computed hash == hash.before → integrity confirmed, continue

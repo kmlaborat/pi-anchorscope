@@ -28,15 +28,17 @@ Anchor Buffer must be in APPROVED state with `validation_report.anchor_valid: tr
 
 1. Read `anchor`, `hash.before`, and `proposed_replacement` from the Anchor Buffer
 2. Read the current file with `as.read`
-3. Locate the anchored region and compute SHA-256
-4. Compare to `hash.before`
-   - Match → proceed to step 5
+3. Normalize line endings (CRLF → LF)
+4. Locate the anchored region and compute `xxh3_64` of the normalized content
+5. Compare to `hash.before`
+   - Match → proceed to step 6
    - Mismatch → ABORT (see below)
-5. Construct the new file content: everything before the anchor + `proposed_replacement` + everything after the anchor
-6. Write with `as.write` atomically
-7. Re-read the written file and confirm the change landed correctly
-8. Compute `hash.after` of the new anchored region
-9. Update Anchor Buffer: state → COMMITTED, `hash.after` → recorded
+6. Construct the new file content: everything before the anchor + `proposed_replacement` + everything after the anchor
+7. Apply CRLF → LF normalization to the full new content
+8. Write with `as.write` atomically
+9. Re-read the written file and confirm the change landed correctly
+10. Compute `hash.after` = `xxh3_64` of the new anchored region (normalized)
+11. Update Anchor Buffer: state → COMMITTED, `hash.after` → recorded
 
 ## Output
 
@@ -50,10 +52,10 @@ anchorscope_edit:
     end: |
       <end anchor>
   hash:
-    algorithm: sha256
+    algorithm: xxh3_64
     before: <original hash>
     after: <new hash>
-  true_id: <true_id>
+  true_id: <16-char lowercase hex>
   status: success
 ```
 

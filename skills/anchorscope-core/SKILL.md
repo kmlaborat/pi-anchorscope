@@ -65,7 +65,7 @@ anchorscope_task:
 
 → Detailed anchoring procedure: `/skill:anchorscope-scope-anchoring`
 
-Read the file with `as.read`. Identify the parent scope (smallest enclosing function, class, or module). Select anchors that are unique within that parent scope. Compute SHA-256 hash and True ID.
+Read the file with `as.read`. Normalize line endings (CRLF → LF) before any operation. Identify the parent scope (smallest enclosing function, class, or module). Select anchors that are unique within that parent scope. Compute `xxh3_64` hash and True ID.
 
 **ABORT if anchor uniqueness cannot be guaranteed.** Return to DISCOVERED and reconsider the scope.
 
@@ -106,13 +106,13 @@ anchorscope_task:
     end: |
       <verbatim end anchor>
   hash:
-    algorithm: sha256
+    algorithm: xxh3_64
     before: <hash of original anchored content>
     after: null              # filled after COMMITTED
-  true_id: sha256:<hash>
+  true_id: <16-char lowercase hex>
   content: |
     <verbatim anchored code>
-  proposed_change: |
+  proposed_replacement: |
     <proposed replacement>   # present from DRAFTED onward
   validation:
     status: pending          # pending | approved | rejected

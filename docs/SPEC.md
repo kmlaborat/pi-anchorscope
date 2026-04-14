@@ -29,13 +29,23 @@ A precisely delimited region of source code, identified by a start anchor and an
 
 ### True ID
 
-A stable, content-derived identifier for the Anchored Scope, computed as:
+A stable, content-derived identifier that uniquely identifies an Anchored Scope within its parent scope, computed as:
 
 ```
-true_id = "sha256:" + SHA-256(anchored_scope_content)
+scope_hash = xxh3_64(normalized anchored bytes)
+file_hash  = xxh3_64(normalized full file bytes)
+true_id    = xxh3_64(hex(file_hash) || 0x5F || hex(scope_hash))
 ```
 
-The hash is computed from the raw bytes of the anchored content, including all whitespace and newlines, with no normalization. True ID serves as both a unique identifier and an integrity check seed.
+Where `||` denotes byte concatenation and `0x5F` is the ASCII underscore `_`.
+
+For nested anchoring (level 2+), replace `file_hash` with the parent's `scope_hash`:
+
+```
+true_id = xxh3_64(hex(parent_scope_hash) || 0x5F || hex(child_scope_hash))
+```
+
+All hashes are 16-character lowercase hex strings. True ID encodes both parent context and matched anchored scope — two anchors with identical content but different parents have different True IDs.
 
 ### Anchor Buffer
 
@@ -45,7 +55,7 @@ A task can be resumed at any point by reading the Anchor Buffer — no informati
 
 ### Hash Verification
 
-Before any write operation, the current content of the anchored region is read from disk and its SHA-256 hash is compared to the stored `hash.before`. A mismatch means the file has changed since the scope was established, and the write is aborted. This prevents silent corruption when multiple edits are in flight or when a file is modified externally.
+Before any write operation, the current content of the anchored region is read from disk, normalized (CRLF → LF), and its `xxh3_64` hash is compared to the stored `hash.before`. A mismatch means the file has changed since the scope was established, and the write is aborted. This prevents silent corruption when multiple edits are in flight or when a file is modified externally.
 
 ---
 
@@ -94,12 +104,12 @@ anchorscope_task:
     end: |
       <verbatim end anchor>
   hash:
-    algorithm: sha256
-    before: <hash of original anchored content>
+    algorithm: xxh3_64
+    before: <16-char lowercase hex of original anchored content>
     after: null              # filled after COMMITTED
-  true_id: sha256:<hash>
+  true_id: <16-char lowercase hex>
   content: |
-    <verbatim anchored code as of SCOPED>
+    <verbatim anchored code, CRLF normalized to LF>
   proposed_replacement: |
     <proposed replacement>   # present from DRAFTED onward
   validation:
@@ -122,8 +132,8 @@ Extracting a valid Anchored Scope is the most failure-prone step. The algorithm 
 3. **Select candidate anchors** — prefer function/method signatures and class definitions; avoid generic lines (`return result`, `pass`, bare closing braces) and lines that appear multiple times
 4. **Verify uniqueness** — each anchor must appear exactly once within the parent scope text
 5. **Expand if needed** — if uniqueness fails, extend the anchor to include adjacent distinguishing lines (decorators, preceding comments, etc.); if uniqueness still cannot be achieved, move to the next enclosing scope level
-6. **Extract content** — copy the anchored region verbatim from start anchor through end anchor, inclusive; no trimming or reformatting
-7. **Compute hash and True ID** — SHA-256 of raw bytes
+6. **Normalize and extract content** — apply CRLF → LF normalization; copy the anchored region verbatim from start anchor through end anchor, inclusive; no other transformations
+7. **Compute hash and True ID** — `scope_hash = xxh3_64(normalized anchored bytes)`; `true_id = xxh3_64(hex(file_hash) || 0x5F || hex(scope_hash))`
 8. **Record in Anchor Buffer** — advance state to SCOPED
 
 ### Anchor selection guidelines
@@ -142,7 +152,7 @@ Extracting a valid Anchored Scope is the most failure-prone step. The algorithm 
 Before APPROVED can be issued, all five criteria must pass:
 
 1. **Anchor integrity** — `anchor.start` and `anchor.end` are present in the current file and unique within the parent scope
-2. **Hash integrity** — SHA-256 of the current anchored region matches `hash.before`; mismatch aborts validation entirely and requires re-anchoring
+2. **Hash integrity** — `xxh3_64` of the normalized current anchored region matches `hash.before`; mismatch aborts validation entirely and requires re-anchoring
 3. **Scope containment** — `proposed_replacement` modifies only content within the anchor boundaries
 4. **Minimal diff** — no changes unrelated to the stated `description` (no reformatting, no unrelated renames, no opportunistic refactoring)
 5. **Syntactic correctness** — the replacement is syntactically valid; indentation, bracket matching, and existing signatures are preserved unless explicitly changing them
@@ -155,12 +165,12 @@ The Integrator is the only component that writes to files. It follows this seque
 
 1. Read `anchor`, `hash.before`, and `proposed_replacement` from the Anchor Buffer
 2. Read the current file with `as.read`
-3. Locate the anchored region and compute SHA-256 — compare to `hash.before`
+3. Normalize line endings (CRLF → LF); locate the anchored region and compute `xxh3_64` — compare to `hash.before`
 4. If mismatch: abort, report, do not write
 5. Construct new file content: `<before anchor> + proposed_replacement + <after anchor>`
-6. Write atomically with `as.write`
+6. Apply CRLF → LF normalization to the full new content; write atomically with `as.write`
 7. Re-read and confirm the change landed correctly
-8. Compute `hash.after` of the new anchored region
+8. Compute `hash.after` = `xxh3_64` of the new normalized anchored region
 9. Update Anchor Buffer to COMMITTED
 
 ---

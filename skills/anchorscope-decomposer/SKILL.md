@@ -16,9 +16,11 @@ Anchor Buffer must be in DISCOVERED state. If uncertain, check first with `/skil
 ## Rules
 
 - MUST use `as.read` — never reconstruct file content from memory
+- MUST normalize line endings (CRLF → LF) before hashing or matching
 - MUST verify anchor uniqueness within the parent scope before recording
 - MUST abort if uniqueness cannot be guaranteed
-- MUST compute SHA-256 hash from raw anchored content
+- MUST compute `xxh3_64` hash from normalized anchored content
+- MUST compute True ID as `xxh3_64(hex(file_hash) || 0x5F || hex(scope_hash))`
 - MUST store all results in the Anchor Buffer
 
 ## Procedure
@@ -26,13 +28,14 @@ Anchor Buffer must be in DISCOVERED state. If uncertain, check first with `/skil
 Follow `/skill:anchorscope-scope-anchoring` step by step:
 
 1. Read file with `as.read`
-2. Identify smallest enclosing parent scope
-3. Select candidate anchors (prefer signatures and class definitions)
-4. Verify each anchor appears exactly once in the parent scope
-5. Expand anchors if needed to restore uniqueness
-6. Extract verbatim anchored content
-7. Compute SHA-256 hash and True ID
-8. Update Anchor Buffer to SCOPED
+2. Normalize line endings (CRLF → LF)
+3. Identify smallest enclosing parent scope
+4. Select candidate anchors (prefer signatures and class definitions)
+5. Verify each anchor appears exactly once in the parent scope
+6. Expand anchors if needed to restore uniqueness
+7. Extract verbatim anchored content (CRLF normalized)
+8. Compute `xxh3_64` scope hash and True ID
+9. Update Anchor Buffer to SCOPED
 
 ## Output
 
@@ -46,11 +49,11 @@ anchor:
   end: |
     <verbatim end anchor>
 hash:
-  algorithm: sha256
-  value: <hash>
-true_id: sha256:<hash>
+  algorithm: xxh3_64
+  value: <16-char lowercase hex>
+true_id: <16-char lowercase hex>
 content: |
-  <verbatim anchored code>
+  <verbatim anchored code, CRLF normalized to LF>
 ```
 
 ## On Failure

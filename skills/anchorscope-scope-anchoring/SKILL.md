@@ -58,20 +58,24 @@ Extend start anchor upward or end anchor downward to include distinguishing cont
 
 If uniqueness cannot be established within the current parent scope, move to the next enclosing scope level (e.g., from function body to class body). If still unresolvable, report to your human partner and request guidance.
 
-### Step 6 — Extract the anchored content
+### Step 6 — Normalize and extract the anchored content
 
-The Anchored Scope is the exact text from the first character of the start anchor through the last character of the end anchor, inclusive. Copy verbatim — no trimming, no reformatting.
+The Anchored Scope is the exact text from the first character of the start anchor through the last character of the end anchor, inclusive. Copy verbatim — **apply CRLF → LF normalization**, no other transformations (no trimming, no Unicode normalization, no whitespace changes).
 
 Keep the scope minimal. Include only what is necessary to establish uniqueness and cover the edit target.
 
 ### Step 7 — Compute hash and True ID
 
 ```
-hash  = SHA-256(anchored_scope_content)
-true_id = "sha256:" + hash
+scope_hash = xxh3_64(normalized anchored bytes)
+file_hash  = xxh3_64(normalized full file bytes)
+true_id    = xxh3_64(hex(file_hash) || 0x5F || hex(scope_hash))
 ```
 
-Hash the raw bytes exactly as read, including all whitespace and newlines. No normalization.
+- All hashes are 16-character lowercase hex strings
+- `0x5F` is the ASCII underscore `_` used as separator
+- For nested anchoring (level 2+): replace `file_hash` with the parent's `scope_hash`
+- Normalization (CRLF → LF) MUST be applied before hashing
 
 ### Step 8 — Write to Anchor Buffer
 
@@ -98,11 +102,11 @@ anchor:
   end: |
     <verbatim end anchor — copied exactly from file>
 hash:
-  algorithm: sha256
-  value: <hash>
-true_id: sha256:<hash>
+  algorithm: xxh3_64
+  value: <16-char lowercase hex>
+true_id: <16-char lowercase hex>
 content: |
-  <verbatim anchored code>
+  <verbatim anchored code, CRLF normalized to LF>
 ```
 
 ## Error Reporting
@@ -126,6 +130,7 @@ ERROR: Cannot establish unique anchor in <parent_scope> or any enclosing scope.
 - [ ] Parent scope identified
 - [ ] Start anchor appears exactly once in parent scope
 - [ ] End anchor appears exactly once in parent scope
-- [ ] Content is a verbatim copy of the anchored region
-- [ ] SHA-256 hash computed from raw content
+- [ ] Content is a verbatim copy of the anchored region, CRLF normalized to LF
+- [ ] `xxh3_64` hash computed from normalized content
+- [ ] True ID computed as `xxh3_64(hex(file_hash) || 0x5F || hex(scope_hash))`
 - [ ] Anchor Buffer updated to SCOPED

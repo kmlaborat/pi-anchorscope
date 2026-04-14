@@ -1,4 +1,4 @@
-# anchorscope-skills
+# pi-anchorscope
 
 Deterministic code editing skills for [pi](https://github.com/badlogic/pi-mono), implementing the AnchorScope protocol.
 

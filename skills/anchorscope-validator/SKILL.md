@@ -28,7 +28,7 @@ Read the current file with `as.read`. Confirm:
 
 ### 2. Hash Integrity
 
-Locate the anchored region in the current file. Compute SHA-256 of its content. Compare to `hash.before`.
+Locate the anchored region in the current file. Normalize line endings (CRLF → LF). Compute `xxh3_64` of the normalized content. Compare to `hash.before`.
 
 ```
 Match → proceed

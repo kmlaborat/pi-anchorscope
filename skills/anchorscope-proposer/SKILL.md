@@ -15,6 +15,8 @@ REJECTED → **DRAFTED** (re-generation)
 
 Anchor Buffer must be in SCOPED or REJECTED state with `anchor`, `content`, and `hash.before` present.
 
+**IMPORTANT:** Use the `anchorscope pipe` subcommand via the `anchorscope` tool to pass content to external tools and retrieve the result.
+
 ## Rules
 
 - MUST modify only code within the Anchored Scope

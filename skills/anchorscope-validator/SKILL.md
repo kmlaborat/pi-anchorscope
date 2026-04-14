@@ -12,6 +12,8 @@ DRAFTED → **REVIEWING** → **APPROVED** | **REJECTED**
 
 Nothing is written until this skill approves. An approval that misses an error will corrupt the codebase. Be thorough.
 
+**IMPORTANT:** Use the `anchorscope paths` subcommand via the `anchorscope` tool to inspect buffer locations when debugging.
+
 ## Pre-condition
 
 Anchor Buffer must be in DRAFTED state with `proposed_replacement` present.

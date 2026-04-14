@@ -8,7 +8,7 @@ compatibility: pi-v0.22.0+
 
 # AnchorScope Core
 
-**Announce at start:** "I'm using the anchorscope-core skill to edit this code deterministically."
+**Announce at start:** "I'm using the anchorscope-core skill to edit this code deterministically. I will use the `anchorscope` tool to execute AnchorScope commands for managing the Anchor Buffer and applying changes."
 
 ## Why AnchorScope
 

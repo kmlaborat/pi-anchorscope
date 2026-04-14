@@ -7,11 +7,15 @@
   ],
   "license": "MIT",
   "files": [
+    "extensions/",
     "skills/",
     "README.md",
     "LICENSE"
   ],
   "pi": {
+    "extensions": [
+      "extensions/anchorscope-tool.ts"
+    ],
     "skills": [
       "skills"
     ]

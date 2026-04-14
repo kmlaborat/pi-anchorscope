@@ -12,6 +12,8 @@ APPROVED → **COMMITTED**
 
 This is the only skill that writes to files. One wrong write can corrupt the codebase. Verify before every write, no exceptions.
 
+**IMPORTANT:** Use the `anchorscope` tool to execute `anchorscope write --true-id {true_id} --from-replacement` or `anchorscope write --label {alias} --from-replacement`.
+
 ## Pre-condition
 
 Anchor Buffer must be in APPROVED state with `validation_report.anchor_valid: true` and `validation_report.hash_valid: true`.

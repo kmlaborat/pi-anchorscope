@@ -130,14 +130,71 @@ This is why the Stale Buffer Protocol requires re-reading from the original file
 
 Record all fields and advance state to SCOPED.
 
-## Anchor Selection Quick Reference
+## Anchor Selection Strategy
 
-| Context | Good anchor | Bad anchor |
-|---|---|---|
-| Python function | `def add(a: int, b: int) -> int:` | `return a + b` |
-| Class method | `def __init__(self, config: Config):` | `self.value = 0` |
-| JS export | `export function renderHeader(props) {` | `}` |
-| Config key | `"retry_limit": 3,` | `3,` |
+### The "Start Wide, Then Narrow" Principle
+
+**Level 1 (Wide):** Select a unique, stable parent scope → function, class, or module
+**Level 2 (Narrow):** Read the buffer, select a specific pattern within it
+**Level 3 (Precise):** If needed, anchor an even smaller pattern
+
+**Why this works:**
+- Level 1 needs uniqueness across the *entire file*
+- Level 2+ only needs uniqueness within the *previous scope's buffer*
+
+### When to Use Multi-Level Anchoring
+
+| Scenario | Level 1 Anchor | Level 2 Anchor |
+|----------|----------------|----------------|
+| Multiple loops with same pattern | `def process_orders():` | `for i in range(10):` |
+| Multiple similar functions | `class OrderProcessor:` | `def calculate():` |
+| Multiple conditionals | `def handle_request():` | `if status == 200:` |
+
+### Priority Order for Anchor Selection
+
+1. **Function/method signatures** (highest priority)
+   ```
+   def calculate_total(items: list) -> int:
+   fn main() {
+   public function render() {
+   ```
+
+2. **Class definitions**
+   ```
+   class BillingService:
+   class OrderProcessor {
+   ```
+
+3. **Unique configuration keys**
+   ```
+   "max_retries": 3,
+   APP_ENV = "production"
+   ```
+
+4. **Character comments** (if present)
+   ```
+   // Production config
+   // NOTE: This is the main entry point
+   ```
+
+### Avoid (lowest priority)
+
+- Blank lines only
+- Generic single-liners — `return result`, `pass`, `i += 1`, `}`
+- Fragments that appear multiple times anywhere in the file
+- Lines distinguished only by indentation level
+
+### Anchor Expansion Pattern
+
+When uniqueness fails, expand the anchor by adding context:
+
+| Original | Expanded |
+|----------|----------|
+| `for i in range(10):` | `def process():\n    for i in range(10):` |
+| `return result` | `def calculate():\n    total = 0\n    for item in items:\n        total += item\n    return result` |
+| `}` | `def process():\n    for i in range(10):\n        print(i)\n}` |
+
+
 
 ## Output Format
 

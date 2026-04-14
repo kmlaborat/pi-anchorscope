@@ -40,6 +40,42 @@ Follow `/skill:anchorscope-scope-anchoring` step by step:
 
 **Multi-line anchors:** For multi-line content, consider using `--anchor-file` instead of inline `--anchor` strings to avoid shell escaping issues. See Tutorial Section 9 for details.
 
+## Multi-Level Anchoring Guidance
+
+### Strategy: Start Wide, Then Narrow
+
+```
+Level 1 (Wide):  Anchor the function/class/module (file-level uniqueness)
+Level 2 (Narrow): Read buffer, anchor specific pattern (buffer-level uniqueness)
+```
+
+**Key insight:** A Level 2 anchor only needs to be unique within the Level 1 buffer, not the entire file!
+
+### Example Workflow
+
+1. **Level 1 - Anchor function:**
+   ```
+   anchorscope read --file processor.py --anchor "def process_orders():"
+   # true_id = a1b2c3d4e5f6g7h8
+   ```
+
+2. **Level 2 - Anchor loop inside function:**
+   ```
+   anchorscope read --true-id a1b2c3d4e5f6g7h8 --anchor "for i in range(10):"
+   # Reads from buffer/a1b2c3d4e5f6g7h8/content
+   # true_id = i9j0k1l2m3n4o5p6
+   ```
+
+**Why this works:** Even though `for i in range(10):` appears elsewhere in the file, it's UNIQUE when searching only within the `process_orders()` function buffer!
+
+### Common Patterns
+
+| File Pattern | Level 1 | Level 2 |
+|--------------|---------|---------|
+| Multiple loops | `def process_orders():` | `for i in range(10):` |
+| Multiple functions | `class OrderProcessor:` | `def calculate():` |
+| Multiple conditionals | `def handle():` | `if status == 200:` |
+
 ## Output
 
 ```yaml

@@ -10,9 +10,7 @@
     "skills/",
     "README.md",
     "LICENSE",
-    "AnchorScope-tutorial.md",
-    "AnchorScope-Anchoring-Guide.md",
-    "AnchorScope-Anchoring-Checklist.md"
+    "AnchorScope-tutorial.md"
   ],
   "pi": {
     "skills": [

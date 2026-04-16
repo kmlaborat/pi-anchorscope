@@ -24,6 +24,20 @@ This package includes the following skills:
 
 For detailed anchoring guidance, see `/skill:anchorscope-anchoring-guide`.
 
+## Extensions
+
+This project includes the `anchorscope-tools` extension that registers the following tools for use with pi:
+
+| Tool | Purpose |
+|------|---------|
+| `as_read` | Execute `anchorscope read` for deterministic code reading |
+| `as_write` | Execute `anchorscope write` for deterministic code writing |
+| `as_pipe` | Execute `anchorscope pipe` for external tool integration |
+| `as_paths` | Execute `anchorscope paths` for buffer path debugging |
+| `as_label` | Execute `anchorscope label` for human-readable aliases |
+
+**Important:** The extension uses `pi.exec()` from ExtensionAPI (NOT `ctx.exec()` from ExtensionContext). See `docs/IMPLEMENTATION-GUIDE.md` for details.
+
 ## Install
 
 ```bash
@@ -51,10 +65,10 @@ When AnchorScope is active, you'll use the **`anchorscope` tool** instead of sta
 | Buffer info | - | `anchorscope paths --true-id <id>` |
 
 **How to tell them apart:**
-- `anchorscope read` outputs `scope_hash=` and `ture_id=` in the console
+- `anchorscope read` outputs `scope_hash=` and `true_id=` in the console
 - Standard `read` doesn't produce these anchorscope-specific markers
 
-When in doubt, look for the `scope_hash=` and `ture_id=` markers in the output!
+When in doubt, look for the `scope_hash=` and `true_id=` markers in the output!
 
 ## Why AnchorScope
 

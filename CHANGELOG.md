@@ -14,10 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Extension: Use `pi.exec()` instead of `ctx.exec()` for all tools
 - Extension: Updated tool descriptions to reflect pi.exec() requirements
 - Extension: Fixed typo `ture_id` → `true_id` in as_read promptGuidelines
+- Skills: Relaxed `read` requirement - allow standard `read` for exploration phase
+- Skills: Updated documentation to clarify exploration vs deterministic phases
 
 ### Fixed
 - Extension: Removed unnecessary `fullCommand` string building
 - Extension: Updated as_pipe to support both `--true-id` and `--label` options
+- Skills: Updated skill descriptions to match relaxed requirements
 
 ## [0.1.0] - 2026-04-16
 

@@ -11,7 +11,7 @@ export default function (pi: ExtensionAPI) {
     promptGuidelines: [
       "Use as_read for ALL code reading when AnchorScope protocol is active.",
       "Do NOT use standard 'read' tool - it doesn't provide anchored scope or True ID hash verification.",
-      "as_read outputs scope_hash and ture_id in the console - these markers distinguish it from standard read."
+      "as_read outputs scope_hash and true_id in the console - these markers distinguish it from standard read."
     ],
     parameters: Type.Object({
       args: Type.Array(Type.String(), {
@@ -19,13 +19,7 @@ export default function (pi: ExtensionAPI) {
       }),
     }),
     async execute(_toolCallId, params, signal, onUpdate, ctx) {
-      const fullCommand = `anchorscope read ${params.args.join(" ")}`;
-
-      if (onUpdate) {
-        onUpdate({ content: [{ type: "text", text: `Executing: ${fullCommand}` }] });
-      }
-
-      const result = await ctx.exec("anchorscope", ["read", ...params.args], {
+      const result = await pi.exec("anchorscope", ["read", ...params.args], {
         signal,
         cwd: ctx.cwd,
       });
@@ -58,13 +52,7 @@ export default function (pi: ExtensionAPI) {
       }),
     }),
     async execute(_toolCallId, params, signal, onUpdate, ctx) {
-      const fullCommand = `anchorscope write ${params.args.join(" ")}`;
-
-      if (onUpdate) {
-        onUpdate({ content: [{ type: "text", text: `Executing: ${fullCommand}` }] });
-      }
-
-      const result = await ctx.exec("anchorscope", ["write", ...params.args], {
+      const result = await pi.exec("anchorscope", ["write", ...params.args], {
         signal,
         cwd: ctx.cwd,
       });
@@ -88,7 +76,7 @@ export default function (pi: ExtensionAPI) {
     promptSnippet: "AnchorScope pipe tool",
     promptGuidelines: [
       "Use as_pipe when integrating external tools with AnchorScope protocol.",
-      "as_pipe enables the pipe mode - use --true-id with external tool processing."
+      "Use --true-id <id> or --label <alias> for external tool processing (labels created with as_label)."
     ],
     parameters: Type.Object({
       args: Type.Array(Type.String(), {
@@ -96,13 +84,7 @@ export default function (pi: ExtensionAPI) {
       }),
     }),
     async execute(_toolCallId, params, signal, onUpdate, ctx) {
-      const fullCommand = `anchorscope pipe ${params.args.join(" ")}`;
-
-      if (onUpdate) {
-        onUpdate({ content: [{ type: "text", text: `Executing: ${fullCommand}` }] });
-      }
-
-      const result = await ctx.exec("anchorscope", ["pipe", ...params.args], {
+      const result = await pi.exec("anchorscope", ["pipe", ...params.args], {
         signal,
         cwd: ctx.cwd,
       });
@@ -134,13 +116,7 @@ export default function (pi: ExtensionAPI) {
       }),
     }),
     async execute(_toolCallId, params, signal, onUpdate, ctx) {
-      const fullCommand = `anchorscope paths ${params.args.join(" ")}`;
-
-      if (onUpdate) {
-        onUpdate({ content: [{ type: "text", text: `Executing: ${fullCommand}` }] });
-      }
-
-      const result = await ctx.exec("anchorscope", ["paths", ...params.args], {
+      const result = await pi.exec("anchorscope", ["paths", ...params.args], {
         signal,
         cwd: ctx.cwd,
       });
@@ -172,13 +148,7 @@ export default function (pi: ExtensionAPI) {
       }),
     }),
     async execute(_toolCallId, params, signal, onUpdate, ctx) {
-      const fullCommand = `anchorscope label ${params.args.join(" ")}`;
-
-      if (onUpdate) {
-        onUpdate({ content: [{ type: "text", text: `Executing: ${fullCommand}` }] });
-      }
-
-      const result = await ctx.exec("anchorscope", ["label", ...params.args], {
+      const result = await pi.exec("anchorscope", ["label", ...params.args], {
         signal,
         cwd: ctx.cwd,
       });

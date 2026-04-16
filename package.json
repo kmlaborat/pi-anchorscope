@@ -14,10 +14,27 @@
   ],
   "pi": {
     "extensions": [
-      "extensions/anchorscope-tool.ts"
+      "extensions/anchorscope-tools.ts"
     ],
     "skills": [
       "skills"
     ]
-  }
+  },
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kmlaborat/pi-anchorscope.git"
+  },
+  "author": "",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kmlaborat/pi-anchorscope/issues"
+  },
+  "homepage": "https://github.com/kmlaborat/pi-anchorscope#readme"
 }

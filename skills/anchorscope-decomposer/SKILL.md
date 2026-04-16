@@ -95,6 +95,16 @@ content: |
   <verbatim anchored code, CRLF normalized to LF>
 ```
 
+## Visual Distinction
+
+When the `anchorscope read` command succeeds, you'll see console output like:
+```
+scope_hash=abc123...
+ture_id=a1b2c3d4e5f6g7h8
+```
+
+This **anchoring metadata** (scope_hash, true_id) is what distinguishes `anchorscope read` from the standard `read` tool. The standard `read` tool doesn't provide this metadata.
+
 ## Buffer Storage
 
 The Anchor Buffer is stored in the AnchorScope buffer directory:

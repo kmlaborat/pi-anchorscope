@@ -1,6 +1,6 @@
 # pi-anchorscope
 
-**Executable skills for [pi](https://github.com/badlogic/pi-mono) to use the [AnchorScope](https://github.com/kmlaborat/AnchorScope) protocol.**
+**Skills for [pi](https://github.com/badlogic/pi-mono) to use the [AnchorScope](https://github.com/kmlaborat/AnchorScope) protocol.**
 
 This project provides the skill implementation that brings the AnchorScope protocol to the pi coding agent. It enables deterministic, safe, and reproducible code editing by enforcing anchored scopes, true IDs, and hash verification.
 
@@ -39,6 +39,22 @@ Activate AnchorScope with one slash command:
 ```
 
 Once loaded, all code edits in the session follow the AnchorScope protocol. To stop, clear the context.
+
+### Tool Identification
+
+When AnchorScope is active, you'll use the **`anchorscope` tool** instead of standard read/write tools:
+
+| Action | Standard Tool | AnchorScope Tool |
+|--------|--------------|------------------|
+| Read code | `read` | `anchorscope read --file <path> --anchor "..."` |
+| Write code | `write` | `anchorscope write --file <path> --anchor "..." --replacement "..."` |
+| Buffer info | - | `anchorscope paths --true-id <id>` |
+
+**How to tell them apart:**
+- `anchorscope read` outputs `scope_hash=` and `ture_id=` in the console
+- Standard `read` doesn't produce these anchorscope-specific markers
+
+When in doubt, look for the `scope_hash=` and `ture_id=` markers in the output!
 
 ## Why AnchorScope
 

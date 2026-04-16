@@ -10,6 +10,16 @@ compatibility: pi-v0.22.0+
 
 **Announce at start:** "I'm using the anchorscope-core skill to edit this code deterministically. I will use the `anchorscope` tool to execute AnchorScope commands for managing the Anchor Buffer and applying changes."
 
+## Tool Usage
+
+| Standard Tool | AnchorScope Equivalent | When to Use |
+|---------------|----------------------|-------------|
+| `read` | `anchorscope read` | **ALWAYS** when AnchorScope is active |
+| `write` | `anchorscope write` | **ALWAYS** when AnchorScope is active |
+| `bash` | `anchorscope pipe/paths` | For buffer management |
+
+**Critical:** When the AnchorScope protocol is active, do NOT use the standard `read` or `write` tools. They don't provide the anchoring needed for safe, deterministic edits.
+
 ## Why AnchorScope
 
 LLMs editing code have four systemic failure modes. AnchorScope addresses each:

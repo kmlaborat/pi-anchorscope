@@ -16,7 +16,7 @@ Anchor Buffer must be in DISCOVERED state. If uncertain, check first with `/skil
 
 ## Rules
 
-- MUST use `as.read` — never reconstruct file content from memory
+- MUST use `as.read` for establishing the Anchored Scope (deterministic phase)
 - MUST normalize line endings (CRLF → LF) before hashing or matching
 - MUST verify anchor uniqueness within the parent scope before recording
 - MUST abort if uniqueness cannot be guaranteed
@@ -28,15 +28,16 @@ Anchor Buffer must be in DISCOVERED state. If uncertain, check first with `/skil
 
 Follow `/skill:anchorscope-scope-anchoring` step by step:
 
-1. Read file with `as.read`
-2. Normalize line endings (CRLF → LF)
-3. Identify smallest enclosing parent scope
-4. Select candidate anchors (prefer signatures and class definitions)
-5. Verify each anchor appears exactly once in the parent scope
-6. Expand anchors if needed to restore uniqueness
-7. Extract verbatim anchored content (CRLF normalized)
-8. Compute `xxh3_64` scope hash and True ID
-9. Update Anchor Buffer to SCOPED
+1. **Exploration phase (optional):** Use standard `read` to understand file structure and find anchor candidates
+2. **Deterministic phase:** Use `as.read` to establish the Anchored Scope with `scope_hash` and `true_id`
+3. Normalize line endings (CRLF → LF)
+4. Identify smallest enclosing parent scope
+5. Select candidate anchors (prefer signatures and class definitions)
+6. Verify each anchor appears exactly once in the parent scope
+7. Expand anchors if needed to restore uniqueness
+8. Extract verbatim anchored content (CRLF normalized)
+9. Compute `xxh3_64` scope hash and True ID
+10. Update Anchor Buffer to SCOPED
 
 **Multi-line anchors:** For multi-line content, consider using `--anchor-file` instead of inline `--anchor` strings to avoid shell escaping issues. See Tutorial Section 9 for details.
 

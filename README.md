@@ -54,21 +54,20 @@ Activate AnchorScope with one slash command:
 
 Once loaded, all code edits in the session follow the AnchorScope protocol. To stop, clear the context.
 
-### Tool Identification
+### Tool Selection Strategy
 
-When AnchorScope is active, you'll use the **`anchorscope` tool** instead of standard read/write tools:
+| Purpose | Recommended Tool | Reason |
+|---------|------------------|--------|
+| Quick file structure check | `read` | Fast, no anchoring overhead |
+| Finding anchor candidates | `read` | Exploratory, not yet deterministic |
+| Setting anchors | `as_read` | Deterministic, with `scope_hash`/`true_id` |
+| Actual edits | `as_write` | Hash-verified, atomic |
+| Debugging buffers | `as_paths` | Inspect buffer locations |
 
-| Action | Standard Tool | AnchorScope Tool |
-|--------|--------------|------------------|
-| Read code | `read` | `anchorscope read --file <path> --anchor "..."` |
-| Write code | `write` | `anchorscope write --file <path> --anchor "..." --replacement "..."` |
-| Buffer info | - | `anchorscope paths --true-id <id>` |
-
-**How to tell them apart:**
-- `anchorscope read` outputs `scope_hash=` and `true_id=` in the console
-- Standard `read` doesn't produce these anchorscope-specific markers
-
-When in doubt, look for the `scope_hash=` and `true_id=` markers in the output!
+**Rule of thumb:**
+- Use `read` when you just need to **look around** (exploration phase)
+- Use `as_read` when you need to **set an anchor and start editing** (deterministic phase)
+- Use `as_write` for any actual code modification
 
 ## Why AnchorScope
 

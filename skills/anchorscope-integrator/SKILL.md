@@ -21,11 +21,13 @@ Anchor Buffer must be in APPROVED state with `validation_report.anchor_valid: tr
 ## Rules
 
 - MUST re-verify the hash immediately before writing — not once during REVIEWING, again now
-- MUST use `as.write` for all file modifications
+- MUST use `as.write` for all file modifications (the only skill that writes to files)
 - MUST apply changes atomically — no partial writes
 - MUST abort if the final hash check fails
 - MUST record `hash.after` in the Anchor Buffer after a successful write
 - NEVER write without completing the final hash verification
+
+**Note:** `as.write` is mandatory for all file modifications in AnchorScope. Standard `write` doesn't provide hash verification and can silently corrupt code.
 
 ## Procedure
 

@@ -16,7 +16,11 @@ This is the hardest part of AnchorScope. A wrong anchor silently breaks determin
 
 ### Step 1 — Read the file
 
-Use `as.read` to retrieve the full file. Do not use memory. Do not use partial reads.
+**Exploration phase:** Use standard `read` to understand the file structure and identify potential anchor candidates. This is exploratory and doesn't need hash verification yet.
+
+**Deterministic phase:** When you've found a stable, unique anchor, use `as.read` to establish the Anchored Scope with `scope_hash` and `true_id`.
+
+Do not use memory. Do not use partial reads.
 
 ### Step 2 — Identify the parent scope
 

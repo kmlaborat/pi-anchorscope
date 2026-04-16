@@ -10,15 +10,30 @@ compatibility: pi-v0.22.0+
 
 **Announce at start:** "I'm using the anchorscope-core skill to edit this code deterministically. I will use the `anchorscope` tool to execute AnchorScope commands for managing the Anchor Buffer and applying changes."
 
-## Tool Usage
+## Tool Selection Strategy
+
+| Purpose | Recommended Tool | Reason |
+|---------|------------------|--------|
+| Quick file structure check | `read` | Fast, no anchoring overhead |
+| Finding anchor candidates | `read` | Exploratory, not yet deterministic |
+| Setting anchors | `as_read` | Deterministic, with `scope_hash`/`true_id` |
+| Actual edits | `as_write` | Hash-verified, atomic |
+| Debugging buffers | `as_paths` | Inspect buffer locations |
+
+**Rule of thumb:**
+- Use `read` when you just need to **look around** (exploration phase)
+- Use `as_read` when you need to **set an anchor and start editing** (deterministic phase)
+- Use `as_write` for any actual code modification
+
+## Tool Usage Reference
 
 | Standard Tool | AnchorScope Equivalent | When to Use |
 |---------------|----------------------|-------------|
-| `read` | `anchorscope read` | **ALWAYS** when AnchorScope is active |
-| `write` | `anchorscope write` | **ALWAYS** when AnchorScope is active |
+| `read` | `anchorscope read` | Exploration: finding anchor candidates, quick structure checks |
+| `write` | `anchorscope write` | **ALWAYS** for actual edits |
 | `bash` | `anchorscope pipe/paths` | For buffer management |
 
-**Critical:** When the AnchorScope protocol is active, do NOT use the standard `read` or `write` tools. They don't provide the anchoring needed for safe, deterministic edits.
+**Critical:** For deterministic, hash-verified edits, always use `as_read` and `as_write`. They provide the anchoring needed for safe, reproducible changes.
 
 ## Why AnchorScope
 
@@ -76,7 +91,9 @@ anchorscope_task:
 
 → Detailed anchoring procedure: `/skill:anchorscope-scope-anchoring`
 
-Read the file with `as.read`. Normalize line endings (CRLF → LF) before any operation. Identify the parent scope (smallest enclosing function, class, or module). Select anchors that are unique within that parent scope. Compute `xxh3_64` hash and True ID.
+**First**, use standard `read` to understand the file structure and identify potential anchor candidates. This is exploratory and doesn't need hash verification yet.
+
+**Then**, when you've found a stable, unique anchor, use `as_read` to establish the Anchored Scope with `scope_hash` and `true_id`. Normalize line endings (CRLF → LF) before hashing. Identify the parent scope (smallest enclosing function, class, or module). Compute `xxh3_64` hash and True ID.
 
 **ABORT if anchor uniqueness cannot be guaranteed.** Return to DISCOVERED and reconsider the scope.
 

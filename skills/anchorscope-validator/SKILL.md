@@ -29,6 +29,8 @@ Read the current file with `as.read`. Confirm:
 - `anchor.end` appears in the file
 - Both are unique within the parent scope
 
+**Note:** This is the final verification before writing. Use `as.read` here because you need the `scope_hash` to compare against `hash.before`. Standard `read` would not provide the necessary hash.
+
 ### 2. Hash Integrity
 
 Locate the anchored region in the current file. Normalize line endings (CRLF → LF). Compute `xxh3_64` of the normalized content. Compare to `hash.before`.

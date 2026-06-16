@@ -8,11 +8,37 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { withFileMutationQueue } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
-import { resolve } from "node:path";
+import { resolve, isAbsolute as pathIsAbsolute } from "node:path";
+import { existsSync } from "node:fs";
 
 // Resolve the anchorscope binary path
 function getAnchorscopeBin(): string {
   return process.env.ANCHORSCOPE_BIN ?? "anchorscope";
+}
+
+/**
+ * Normalize a file path for the native anchorscope binary.
+ *
+ * On Windows, paths like "/tmp/file.rs" (MinGW/MSYS2 style) are not understood
+ * by native binaries. We resolve them through Node.js which handles the
+ * MSYS2 mount translation, then verify the resolved path actually exists.
+ */
+function resolveFilePath(filePath: string, cwd: string): string {
+  // Already a Windows absolute path (e.g. C:\foo\bar.rs) — pass through
+  if (pathIsAbsolute(filePath)) {
+    return filePath;
+  }
+
+  // Resolve relative to cwd so Node.js translates MSYS2 mounts (/tmp → real temp dir)
+  const resolved = resolve(cwd, filePath);
+
+  // If the file exists at the resolved path, use it
+  if (existsSync(resolved)) {
+    return resolved;
+  }
+
+  // Fall back to the original path so anchorscope can report its own error
+  return filePath;
 }
 
 // Parse "scope_hash=<hex>\ncontent=<text>" from stdout
@@ -60,7 +86,7 @@ export default function (pi: ExtensionAPI) {
       }),
     }),
     async execute(_toolCallId, params, signal, _onUpdate, ctx) {
-      const filePath = resolve(ctx.cwd, params.file);
+      const filePath = resolveFilePath(params.file, ctx.cwd);
 
       const result = await pi.exec(bin, ["read", "--file", filePath, "--anchor", params.anchor], {
         signal,
@@ -137,7 +163,7 @@ export default function (pi: ExtensionAPI) {
       }),
     }),
     async execute(_toolCallId, params, signal, _onUpdate, ctx) {
-      const filePath = resolve(ctx.cwd, params.file);
+      const filePath = resolveFilePath(params.file, ctx.cwd);
 
       return withFileMutationQueue(filePath, async () => {
         const result = await pi.exec(

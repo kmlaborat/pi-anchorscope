@@ -329,7 +329,7 @@ export default function (pi: ExtensionAPI) {
           const output = writeResult.stderr || writeResult.stdout || "";
           if (output.includes("HASH_MISMATCH")) {
             throw new Error(
-              `anchorscope_apply: HASH_MISMATCH — the file content has changed since the read step. Retry the apply.`,}]
+              `anchorscope_apply: HASH_MISMATCH — the file content has changed since the read step. Retry the apply.`
             );
           }
           if (output.includes("NO_MATCH")) {

@@ -5,6 +5,7 @@
   "keywords": ["pi-package"],
   "license": "MIT",
   "pi": {
-    "skills": ["./skills"]
+    "skills": ["./skills"],
+    "extensions": ["./extensions/anchorscope"]
   }
 }

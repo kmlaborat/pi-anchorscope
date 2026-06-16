@@ -1,8 +1,11 @@
 /**
  * AnchorScope Extension for pi
  *
- * Registers anchorscope_read and anchorscope_write tools that call the
- * anchorscope CLI binary for hash-verified scoped file editing.
+ * Registers anchorscope_read, anchorscope_write, and anchorscope_apply tools
+ * that call the anchorscope CLI binary for hash-verified scoped file editing.
+ *
+ * anchorscope_apply is the recommended high-level API — it combines read + write
+ * internally so the LLM only needs to specify anchor and content.
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
@@ -100,7 +103,8 @@ export default function (pi: ExtensionAPI) {
     promptSnippet:
       "Read a targeted scope from a file with hash verification",
     promptGuidelines: [
-      "Use anchorscope_read when you need to read a specific part of a file before editing it.",
+      "This is a low-level API. Use anchorscope_apply instead for most file edits.",
+      "Use anchorscope_read only when you need to inspect a scope before deciding what to change.",
       "anchorscope_read returns scope_hash which is required for anchorscope_write.",
     ],
     parameters: Type.Object({
@@ -171,7 +175,8 @@ export default function (pi: ExtensionAPI) {
     promptSnippet:
       "Write a targeted replacement to a file with hash verification",
     promptGuidelines: [
-      "Use anchorscope_write after anchorscope_read to apply a targeted edit.",
+      "This is a low-level API. Use anchorscope_apply instead for most file edits.",
+      "Use anchorscope_write only when you already have a scope_hash from a prior anchorscope_read.",
       "Always use the scope_hash returned by anchorscope_read as expected_hash.",
       "Never invent or guess scope_hash. It must come from anchorscope_read.",
     ],
@@ -237,6 +242,116 @@ export default function (pi: ExtensionAPI) {
           details: {
             file: filePath,
             expectedHash: params.expected_hash,
+          },
+        };
+      });
+    },
+  });
+
+  // ---------------------------------------------------------------------------
+  // Tool 3: anchorscope_apply (high-level API)
+  // ---------------------------------------------------------------------------
+  pi.registerTool({
+    name: "anchorscope_apply",
+    label: "AnchorScope Apply",
+    description:
+      "Apply a targeted edit to a file using an exact anchor string. Internally performs read (to get scope_hash) then write (with hash verification). Use this as the primary tool for all file edits.",
+    promptSnippet:
+      "Apply a targeted, hash-verified edit to a specific scope in a file",
+    promptGuidelines: [
+      "Use anchorscope_apply for ALL file edits instead of the built-in edit or write tools.",
+      "anchor must be an exact byte sequence that appears exactly once in the file.",
+      "content is the complete replacement for the matched anchor scope.",
+      "If NO_MATCH is returned, the anchor does not exist — check the file and revise the anchor.",
+      "If MULTIPLE_MATCHES is returned, the anchor is not unique — use a longer anchor string.",
+    ],
+    parameters: Type.Object({
+      file: Type.String({
+        description: "Path to the file to edit",
+      }),
+      anchor: Type.String({
+        description:
+          "Exact text to match in the file. Must appear exactly once.",
+      }),
+      content: Type.String({
+        description: "Complete replacement for the matched anchor scope.",
+      }),
+    }),
+    async execute(_toolCallId, params, signal, _onUpdate, ctx) {
+      const filePath = resolve(ctx.cwd, params.file);
+
+      // Step 1: read → get scope_hash
+      const readResult = await pi.exec(
+        bin,
+        ["read", "--file", filePath, "--anchor", params.anchor],
+        { signal },
+      );
+
+      if (readResult.code !== 0) {
+        const output = readResult.stderr || readResult.stdout || "";
+        if (output.includes("NO_MATCH")) {
+          throw new Error(
+            `anchorscope_apply: NO_MATCH — the anchor was not found in the file. Check the file contents and revise the anchor.`,
+          );
+        }
+        if (output.includes("MULTIPLE_MATCHES")) {
+          throw new Error(
+            `anchorscope_apply: MULTIPLE_MATCHES — the anchor matched more than once. Use a longer, more specific anchor string.`,
+          );
+        }
+        throw new Error(
+          `anchorscope_apply read failed (exit ${readResult.code}): ${output.trim()}`,
+        );
+      }
+
+      const parsed = parseReadOutput(readResult.stdout);
+      const scopeHash = parsed.scopeHash;
+
+      // Step 2: write → hash-verified write
+      return withFileMutationQueue(filePath, async () => {
+        const writeResult = await pi.exec(
+          bin,
+          [
+            "write",
+            "--file",
+            filePath,
+            "--anchor",
+            params.anchor,
+            "--expected-hash",
+            scopeHash,
+            "--replacement",
+            params.content,
+          ],
+          { signal },
+        );
+
+        if (writeResult.code !== 0) {
+          const output = writeResult.stderr || writeResult.stdout || "";
+          if (output.includes("HASH_MISMATCH")) {
+            throw new Error(
+              `anchorscope_apply: HASH_MISMATCH — the file content has changed since the read step. Retry the apply.`,}]
+            );
+          }
+          if (output.includes("NO_MATCH")) {
+            throw new Error(
+              `anchorscope_apply: NO_MATCH — the anchor was not found during write`,
+            );
+          }
+          throw new Error(
+            `anchorscope_apply write failed (exit ${writeResult.code}): ${output.trim()}`,
+          );
+        }
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Successfully applied edit to ${params.file}\n${writeResult.stdout.trim()}`,
+            },
+          ],
+          details: {
+            file: filePath,
+            scope_hash: scopeHash,
           },
         };
       });

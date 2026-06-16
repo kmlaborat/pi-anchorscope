@@ -1,7 +1,7 @@
 {
   "name": "pi-anchorscope",
   "version": "2.0.0",
-  "description": "AnchorScope v2.0.0 skill for pi coding agent.",
+  "description": "Hash-verified targeted file editing for pi coding agent.",
   "keywords": ["pi-package"],
   "license": "MIT",
   "pi": {

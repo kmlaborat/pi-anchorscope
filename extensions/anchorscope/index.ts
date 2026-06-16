@@ -10,6 +10,7 @@ import { withFileMutationQueue } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import { resolve, isAbsolute as pathIsAbsolute } from "node:path";
 import { existsSync } from "node:fs";
+import { execSync } from "node:child_process";
 
 // Resolve the anchorscope binary path
 function getAnchorscopeBin(): string {
@@ -19,20 +20,46 @@ function getAnchorscopeBin(): string {
 /**
  * Normalize a file path for the native anchorscope binary.
  *
- * On Windows, paths like "/tmp/file.rs" (MinGW/MSYS2 style) are not understood
- * by native binaries. We resolve them through Node.js which handles the
- * MSYS2 mount translation, then verify the resolved path actually exists.
+ * On Windows, paths like "/tmp/file.rs" (Git Bash / Cygwin / MSYS2 mount style)
+ * are not understood by native Windows binaries. Node.js treats "/tmp/..."
+ * as "C:\\tmp\\..." which is a different location from the bash-mount temp dir.
+ *
+ * Strategy:
+ * 1. If it looks like a Windows absolute path (C:\\...), pass through.
+ * 2. If it starts with "/", try `cygpath -w` to translate the mount prefix
+ *    (e.g. /tmp → C:\Users\...\AppData\Local\Temp).
+ * 3. Otherwise treat it as a relative path and resolve against cwd.
+ * 4. In all cases verify with existsSync; fall back to the original path
+ *    so anchorscope can surface its own error message.
  */
 function resolveFilePath(filePath: string, cwd: string): string {
-  // Already a Windows absolute path (e.g. C:\foo\bar.rs) — pass through
-  if (pathIsAbsolute(filePath)) {
+  // Windows absolute path (e.g. C:\foo\bar.rs) — pass through
+  if (pathIsAbsolute(filePath) && /^[a-zA-Z]:\\/.test(filePath)) {
     return filePath;
   }
 
-  // Resolve relative to cwd so Node.js translates MSYS2 mounts (/tmp → real temp dir)
-  const resolved = resolve(cwd, filePath);
+  let resolved: string;
 
-  // If the file exists at the resolved path, use it
+  // Looks like a Unix-style absolute path (/tmp/..., /home/..., etc.)
+  if (filePath.startsWith("/")) {
+    try {
+      // Use cygpath -w to translate mount-aware paths to Windows native format.
+      // Available in Git Bash, MSYS2, Cygwin environments on Windows.
+      resolved = execSync("cygpath -w '" + filePath.replace(/'/g, "'\"'\"'") + "'", {
+        shell: true,
+      })
+        .toString()
+        .trim();
+    } catch {
+      // cygpath not available — fall through to relative resolution
+      resolved = resolve(cwd, filePath);
+    }
+  } else {
+    // Relative path — resolve against cwd
+    resolved = resolve(cwd, filePath);
+  }
+
+  // Verify the file exists at the resolved location
   if (existsSync(resolved)) {
     return resolved;
   }

@@ -1,5 +1,12 @@
 # pi-anchorscope (Legacy)
 
+> **⚠️ Legacy Extension (v1)**
+> This extension targets AnchorScope v1.x concepts (Anchor Buffer, True ID,
+> multi-level anchoring). It is frozen and not recommended for new projects.
+>
+> For new projects, use [pi-anchoredit](https://github.com/kmlaborat/pi-anchoredit)
+> instead, which provides `anchoredit_apply` built on AnchorScope v2.0.0.
+
 **Skills for [pi](https://github.com/badlogic/pi-mono) to use the [AnchorScope v1](https://github.com/kmlaborat/AnchorScope/tree/main/v1) protocol.**
 
 This project provides the skill implementation that brings the AnchorScope protocol to the pi coding agent. It enables deterministic, safe, and reproducible code editing by enforcing anchored scopes, true IDs, and hash verification.

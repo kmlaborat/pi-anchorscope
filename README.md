@@ -1,6 +1,6 @@
-# pi-anchorscope
+# pi-anchorscope (Legacy)
 
-**Skills for [pi](https://github.com/badlogic/pi-mono) to use the [AnchorScope](https://github.com/kmlaborat/AnchorScope) protocol.**
+**Skills for [pi](https://github.com/badlogic/pi-mono) to use the [AnchorScope v1](https://github.com/kmlaborat/AnchorScope/tree/main/v1) protocol.**
 
 This project provides the skill implementation that brings the AnchorScope protocol to the pi coding agent. It enables deterministic, safe, and reproducible code editing by enforcing anchored scopes, true IDs, and hash verification.
 

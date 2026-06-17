@@ -1,129 +1,130 @@
 # pi-anchorscope
 
-Hash-verified targeted file editing for [pi coding agent](https://pi.dev),
-powered by [AnchorScope v2.0.0](https://github.com/kmlaborat/AnchorScope).
+**Skills for [pi](https://github.com/badlogic/pi-mono) to use the [AnchorScope](https://github.com/kmlaborat/AnchorScope) protocol.**
 
-## What it does
+This project provides the skill implementation that brings the AnchorScope protocol to the pi coding agent. It enables deterministic, safe, and reproducible code editing by enforcing anchored scopes, true IDs, and hash verification.
 
-Replaces the built-in `edit` tool with `anchorscope_apply` — a safer,
-more precise editing tool that:
+> **Note:** This is the **pi skill implementation** of the AnchorScope protocol. For the protocol specification, see [kmlaborat/AnchorScope](https://github.com/kmlaborat/AnchorScope).
 
-- Matches an exact byte sequence (anchor) in a file
-- Verifies file state before writing (hash verification)
-- Guarantees zero modification outside the matched scope
+## Documentation
 
-## Why pi-anchorscope?
+This package includes the following skills:
 
-Hash-anchored edit tools like [oh-my-pi's Hashline](https://github.com/can1357/oh-my-pi) operate on **line-level content hashes** — the model references line anchors instead of reproducing text, which eliminates whitespace conflicts and ambiguous matches.
+| Skill | Purpose |
+|-------|---------|
+| `/skill:anchorscope-core` | Main workflow coordinator |
+| `/skill:anchorscope-anchoring-guide` | Practical anchoring strategies |
+| `/skill:anchorscope-tutorial` | Full CLI protocol reference |
+| `/skill:anchorscope-scope-anchoring` | Step-by-step anchoring algorithm |
+| `/skill:anchorscope-decomposer` | Single-phase SCOPED workflow |
+| `/skill:anchorscope-proposer` | Single-phase DRAFTED workflow |
+| `/skill:anchorscope-validator` | Single-phase REVIEWING workflow |
+| `/skill:anchorscope-integrator` | Single-phase COMMITTED workflow |
+| `/skill:anchorscope-buffer-reader` | Read Anchor Buffer state |
 
-This works well for conventional source code, where edits naturally align with line boundaries. However, modern workloads often break this assumption:
+For detailed anchoring guidance, see `/skill:anchorscope-anchoring-guide`.
 
-* Minified or generated code
-* Large single-line JSON / config blobs
-* Inline structures where meaningful edits occur *within* a line
+## Extensions
 
-In these cases, line-level anchoring becomes a limiting abstraction.
+This project includes the `anchorscope-tools` extension that registers the following tools for use with pi:
 
-## pi-anchorscope approach
+| Tool | Purpose |
+|------|---------|
+| `as_read` | Execute `anchorscope read` for deterministic code reading |
+| `as_write` | Execute `anchorscope write` for deterministic code writing |
+| `as_pipe` | Execute `anchorscope pipe` for external tool integration |
+| `as_paths` | Execute `anchorscope paths` for buffer path debugging |
+| `as_label` | Execute `anchorscope label` for human-readable aliases |
 
-pi-anchorscope removes the notion of "lines" entirely and instead operates on **exact byte-level anchors**.
+**Important:** The extension uses `pi.exec()` from ExtensionAPI (NOT `ctx.exec()` from ExtensionContext). See `docs/IMPLEMENTATION-GUIDE.md` for details.
 
-* Anchors are matched as raw byte sequences
-* Edits target precise substrings within a file
-* No dependence on line structure or formatting
-
-This makes it particularly effective for:
-
-* Inline edits inside long single-line structures
-* JSON / minified / serialized formats
-* Binary file patching (firmware, binary configs, packed data)
-* Fine-grained patching where line granularity is too coarse
-
-## Positioning
-
-* **[oh-my-pi Hashline](https://github.com/can1357/oh-my-pi)**: optimized for *line-level editing efficiency*
-* **pi-anchorscope**: optimized for *intra-line precision and structure-agnostic editing*
-
-Rather than replacing line-based approaches, this project is designed as a **complementary tool for edge cases where line abstraction breaks down**.
-
-## Prerequisites
-
-[AnchorScope v2.0.0](https://github.com/kmlaborat/AnchorScope) must be
-installed and available as `anchorscope` in your PATH:
-
-```bash
-git clone https://github.com/kmlaborat/AnchorScope
-cd AnchorScope && cargo install --path .
-```
-
-Optional: set a custom binary path via environment variable:
-
-```bash
-export ANCHORSCOPE_BIN=/path/to/anchorscope
-```
-
-## Installation
+## Install
 
 ```bash
 pi install git:github.com/kmlaborat/pi-anchorscope
 ```
 
-## Tools
+## Usage
 
-### anchorscope_apply (Recommended)
-
-The primary tool for all file edits.
+Activate AnchorScope with one slash command:
 
 ```
-anchorscope_apply(
-  file: "src/main.rs",
-  anchor: "fn hello() {\n    println!(\"hello\");\n}",
-  content: "fn hello() {\n    println!(\"hi\");\n}"
-)
+/skill:anchorscope-core
 ```
 
-Internally performs `read` (to get scope_hash) then `write`
-(with hash verification). The LLM does not need to manage `scope_hash`.
+Once loaded, all code edits in the session follow the AnchorScope protocol. To stop, clear the context.
 
-### anchorscope_read (Low-level)
+### Tool Selection Strategy
 
-Read a scope and return its `scope_hash` and matched content.
-Use when you need to inspect content before deciding on a replacement.
+| Purpose | Recommended Tool | Reason |
+|---------|------------------|--------|
+| Quick file structure check | `read` | Fast, no anchoring overhead |
+| Finding anchor candidates | `read` | Exploratory, not yet deterministic |
+| Setting anchors | `as_read` | Deterministic, with `scope_hash`/`true_id` |
+| Actual edits | `as_write` | Hash-verified, atomic |
+| Debugging buffers | `as_paths` | Inspect buffer locations |
 
-### anchorscope_write (Low-level)
+**Rule of thumb:**
+- Use `read` when you just need to **look around** (exploration phase)
+- Use `as_read` when you need to **set an anchor and start editing** (deterministic phase)
+- Use `as_write` for any actual code modification
 
-Write a replacement with hash verification.
-Requires `scope_hash` from a prior `anchorscope_read` call.
+## Why AnchorScope
 
-## How it Works
+LLM code editors have four systemic failure modes:
+
+| Failure | AnchorScope solution |
+|---|---|
+| Context loss | Anchored Scope — minimal, precise context only |
+| Wrong edits | True ID — uniquely identifies the target region |
+| Lost state | Anchor Buffer — persists task state externally |
+| Non-determinism | Hash Verification — integrity check before every write |
+
+**Governing principle: No Match, No Hash, No Write.**
+
+## Skills
+
+| Skill | Role | Invoke |
+|---|---|---|
+| **anchorscope-core** | Entry point. Runs full workflow in single-agent mode | `/skill:anchorscope-core` |
+| **anchorscope-scope-anchoring** | Step-by-step algorithm for extracting a unique Anchored Scope | `/skill:anchorscope-scope-anchoring` |
+| **anchorscope-buffer-reader** | Read and interpret an Anchor Buffer to resume or continue a task | `/skill:anchorscope-buffer-reader` |
+| **anchorscope-decomposer** | SCOPED phase — extract anchored scope and compute True ID | `/skill:anchorscope-decomposer` |
+| **anchorscope-proposer** | DRAFTED phase — generate minimal code modification | `/skill:anchorscope-proposer` |
+| **anchorscope-validator** | REVIEWING phase — validate and approve or reject | `/skill:anchorscope-validator` |
+| **anchorscope-integrator** | COMMITTED phase — final hash check and atomic write | `/skill:anchorscope-integrator` |
+
+## State Machine
 
 ```
-LLM calls anchorscope_apply(file, anchor, content)
-  ↓
-Extension: anchorscope read → scope_hash
-  ↓
-Extension: anchorscope write (hash-verified)
-  ↓
-File updated — only the matched scope changed
+DISCOVERED → SCOPED → DRAFTED → REVIEWING → APPROVED → COMMITTED
+                                     ↓
+                                 REJECTED → DRAFTED (retry)
 ```
 
-## Documents
+## Single-Agent vs Multi-Agent
 
-| Document | Description |
-| :--- | :--- |
-| [docs/SPEC.md](docs/SPEC.md) | Extension and Skill specification |
-| [skills/anchorscope/SKILL.md](skills/anchorscope/SKILL.md) | LLM-facing usage guide |
+`anchorscope-core` runs the full workflow by itself. When your coding agent supports subagent dispatch, individual phases can be delegated to their dedicated skills. The protocol is the same either way — the agent decides how to execute it.
 
-## Legacy (v1.x)
+## Context Persistence
 
-The previous version of this package (based on AnchorScope v1.x concepts
-including Anchor Buffer, True ID, and multi-level anchoring) is archived
-in the [v1/](v1/) directory.
+Each skill cross-references the next via `/skill:name`. After context compaction, any reference to an anchorscope skill keeps the chain alive. Clearing context ends the session.
 
-## Status
+---
 
-v2.0.0 — Active development.
+## Attribution
+Skill format and structure adapted from [pi-superpowers](https://github.com/coctostan/pi-superpowers) by coctostan, itself adapted from [Superpowers](https://github.com/obra/superpowers) by Jesse Vincent, licensed under MIT.
+
+---
 
 ## License
 
-MIT License
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for the full text.
+
+---
+
+### Disclaimer
+
+**THE SOFTWARE IS PROVIDED "AS IS"**, without warranty of any kind. As this is a reference implementation of a file-editing protocol, the author is not responsible for any data loss or unintended file modifications resulting from its use. Always use version control and test in a safe environment.
+
+Copyright (c) 2026 kmlaborat

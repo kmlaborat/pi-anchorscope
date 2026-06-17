@@ -1,11 +1,40 @@
 {
-  "name": "pi-anchorscope",
-  "version": "2.0.0",
-  "description": "Hash-verified targeted file editing for pi coding agent.",
-  "keywords": ["pi-package"],
+  "name": "anchorscope-skills",
+  "version": "0.1.0",
+  "description": "Deterministic code editing skills for pi, implementing the AnchorScope protocol",
+  "keywords": [
+    "pi-package"
+  ],
   "license": "MIT",
+  "files": [
+    "extensions/",
+    "skills/",
+    "README.md",
+    "LICENSE"
+  ],
   "pi": {
-    "skills": ["./skills"],
-    "extensions": ["./extensions/anchorscope"]
-  }
+    "extensions": [
+      "extensions/anchorscope-tools.ts"
+    ],
+    "skills": [
+      "skills"
+    ]
+  },
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kmlaborat/pi-anchorscope.git"
+  },
+  "author": "",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kmlaborat/pi-anchorscope/issues"
+  },
+  "homepage": "https://github.com/kmlaborat/pi-anchorscope#readme"
 }

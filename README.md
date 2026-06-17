@@ -12,7 +12,7 @@ more precise editing tool that:
 - Verifies file state before writing (hash verification)
 - Guarantees zero modification outside the matched scope
 
-### Why pi-anchorscope?
+## Why pi-anchorscope?
 
 Hash-anchored edit tools like [oh-my-pi's Hashline](https://github.com/can1357/oh-my-pi) operate on **line-level content hashes** — the model references line anchors instead of reproducing text, which eliminates whitespace conflicts and ambiguous matches.
 
@@ -24,7 +24,7 @@ This works well for conventional source code, where edits naturally align with l
 
 In these cases, line-level anchoring becomes a limiting abstraction.
 
-### pi-anchorscope approach
+## pi-anchorscope approach
 
 pi-anchorscope removes the notion of "lines" entirely and instead operates on **exact byte-level anchors**.
 
@@ -38,7 +38,7 @@ This makes it particularly effective for:
 * JSON / minified / serialized formats
 * Fine-grained patching where line granularity is too coarse
 
-### Positioning
+## Positioning
 
 * **[oh-my-pi Hashline](https://github.com/can1357/oh-my-pi)**: optimized for *line-level editing efficiency*
 * **pi-anchorscope**: optimized for *intra-line precision and structure-agnostic editing*

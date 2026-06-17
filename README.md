@@ -36,6 +36,7 @@ This makes it particularly effective for:
 
 * Inline edits inside long single-line structures
 * JSON / minified / serialized formats
+* Binary file patching (firmware, binary configs, packed data)
 * Fine-grained patching where line granularity is too coarse
 
 ## Positioning

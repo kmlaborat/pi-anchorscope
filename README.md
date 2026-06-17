@@ -11,7 +11,7 @@
 
 This project provides the skill implementation that brings the AnchorScope protocol to the pi coding agent. It enables deterministic, safe, and reproducible code editing by enforcing anchored scopes, true IDs, and hash verification.
 
-> **Note:** This is the **pi skill implementation** of the AnchorScope protocol. For the protocol specification, see [kmlaborat/AnchorScope](https://github.com/kmlaborat/AnchorScope).
+> **Note:** This is the **pi skill implementation** of the AnchorScope v1 protocol. For the protocol specification, see [kmlaborat/AnchorScope](https://github.com/kmlaborat/AnchorScope/tree/main/v1).
 
 ## Documentation
 
